@@ -57,7 +57,7 @@ const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={sessionData?.user} />
+          {isAuth && <NavUser user={sessionData?.user} />}
           <div className="flex justify-center">
             <ModeToggle />
           </div>

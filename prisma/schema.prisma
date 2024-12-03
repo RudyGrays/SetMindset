@@ -49,8 +49,16 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
-  accounts      Account[]
-  sessions      Session[]
+
+  role             Role       @default(STUDENT)
+  documents        Document[]
+  ratingsGiven     Rating[]   @relation("AuthorRatings") // Рейтинги, оставленные пользователем
+  ratings          Rating[]   @relation("UserRatings") // Рейтинги, полученные пользователем
+  lessonsAsTeacher Lesson[]   @relation("TeacherLessons") // Уроки, где пользователь является учителем
+  lessonsAsStudent Lesson[]   @relation("StudentLessons") // Уроки, где пользователь является учеником
+
+  accounts Account[]
+  sessions Session[]
 
   @@map("users")
 }
@@ -62,4 +70,48 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Document {
+  id       String    @id @default(cuid())
+  userId   String
+  filePath String
+  status   DocStatus @default(PENDING)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id       String  @id @default(cuid())
+  userId   String
+  authorId String
+  rating   Int
+  comment  String?
+
+  user   User @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
+  author User @relation("AuthorRatings", fields: [authorId], references: [id], onDelete: Cascade)
+}
+
+model Lesson {
+  id        String   @id @default(cuid())
+  teacherId String
+  studentId String
+  startTime DateTime
+  endTime   DateTime
+  price     Float
+
+  teacher User @relation("TeacherLessons", fields: [teacherId], references: [id], onDelete: Cascade)
+  student User @relation("StudentLessons", fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum DocStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }

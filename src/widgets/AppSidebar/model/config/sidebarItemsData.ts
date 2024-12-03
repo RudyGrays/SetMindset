@@ -6,11 +6,6 @@ export const getSidebarItems = (isAuth: boolean) => {
 
   return [
     {
-      title: "Profile",
-      url: "/profile",
-      icon: User,
-    },
-    {
       title: "Calendar",
       url: "/calendar",
       icon: Calendar,

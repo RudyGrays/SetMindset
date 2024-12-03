@@ -37,15 +37,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         <AppProvider>
           <AppSidebar />
-          <AppLogo />
-          <Container>
-            <Header />
-            <main className="w-full">{children}</main>
-          </Container>
+          <div className="w-full h-full">
+            <div className="flex">
+              <Header />
+            </div>
+
+            <Container>
+              <main className="h-full px-2 py-2">{children}</main>
+            </Container>
+          </div>
         </AppProvider>
       </body>
     </html>
