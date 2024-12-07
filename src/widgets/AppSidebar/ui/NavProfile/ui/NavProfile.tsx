@@ -25,6 +25,7 @@ import {
   useSidebar,
 } from "@/shared/ui/sidebar";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 export function NavUser({
   user,
@@ -83,7 +84,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Account
+                <Link href={"/profile"}>Account</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />

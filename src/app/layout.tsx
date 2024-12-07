@@ -4,7 +4,7 @@ import "./globals.css";
 import { SidebarTrigger } from "@/shared/ui/sidebar";
 import { AppSidebar } from "@/widgets/AppSidebar/ui/AppSidebar";
 
-import { AppProvider } from "@/widgets/Providers/Providers";
+import { AppProvider } from "@/widgets/AppProvider/Provider";
 import { ThemeProvider } from "@/features/Theme/ui/ThemeProvider";
 import { Container } from "@/shared/ui/app-container";
 import { Breadcrumb } from "@/shared/ui/breadcrumb";
@@ -47,7 +47,9 @@ export default function RootLayout({
             </div>
 
             <Container>
-              <main className="h-full px-2 py-2">{children}</main>
+              <main className="h-full px-2 py-2 flex justify-center">
+                {children}
+              </main>
             </Container>
           </div>
         </AppProvider>

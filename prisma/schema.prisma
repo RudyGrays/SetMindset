@@ -46,11 +46,11 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String    @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
 
-  role             Role       @default(STUDENT)
+  role             Role       @default(USER)
   documents        Document[]
   ratingsGiven     Rating[]   @relation("AuthorRatings") // Рейтинги, оставленные пользователем
   ratings          Rating[]   @relation("UserRatings") // Рейтинги, полученные пользователем
@@ -105,8 +105,7 @@ model Lesson {
 }
 
 enum Role {
-  STUDENT
-  TEACHER
+  USER
   ADMIN
 }
 
