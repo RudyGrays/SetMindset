@@ -7,7 +7,7 @@ import GitHubProvider from "next-auth/providers/github";
 
 export const authConfig: AuthOptions = {
   adapter: PrismaAdapter(dbClient),
-  debug: true,
+
   callbacks: {
     session: async ({ session, user }) => {
       return {
@@ -22,7 +22,6 @@ export const authConfig: AuthOptions = {
   },
   pages: {
     signIn: "/auth/sign-in",
-
     newUser: "/profile/new",
     verifyRequest: "/auth/verify-request",
   },
@@ -39,7 +38,9 @@ export const authConfig: AuthOptions = {
           user: process.env.EMAIL_SERVER_USER,
           pass: process.env.EMAIL_SERVER_PASSWORD,
         },
+        connectionTimeout: 60000,
       },
+
       from: process.env.EMAIL_FROM,
     }),
   ],

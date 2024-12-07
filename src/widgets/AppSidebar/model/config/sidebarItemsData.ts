@@ -1,4 +1,4 @@
-import { Calendar, LogIn, Search, Settings, User } from "lucide-react";
+import { Calendar, LogIn, Search, Settings, User, Video } from "lucide-react";
 
 export const getSidebarItems = (isAuth: boolean) => {
   if (!isAuth)
@@ -19,6 +19,11 @@ export const getSidebarItems = (isAuth: boolean) => {
       title: "Settings",
       url: "/settings",
       icon: Settings,
+    },
+    {
+      title: "Call",
+      url: "/video",
+      icon: Video,
     },
   ];
 };
