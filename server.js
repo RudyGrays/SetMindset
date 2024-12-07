@@ -8,7 +8,10 @@ const port = Number(process.env.HOST_PORT);
 
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
-
+if (isNaN(port) || port <= 0 || port > 65535) {
+  console.error("Неверный порт: должен быть числом от 1 до 65535.");
+  process.exit(1);
+}
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
