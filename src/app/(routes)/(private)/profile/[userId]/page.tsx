@@ -4,7 +4,7 @@ import { ProfileCard } from "@/features/Profile/ui/profile-card";
 import { dbClient } from "@/shared/db/prisma.client";
 import { redirect } from "next/navigation";
 
-const Page = async ({ params }: { params: { userId: string } }) => {
+const Page = async ({ params }: { params: Promise<{ userId: string }> }) => {
   const session = await getAppSessionServer();
   const { userId } = await params;
 

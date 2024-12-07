@@ -2,7 +2,7 @@ import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-sessio
 import { EditableProfileCard } from "@/features/Profile/ui/editable-profile-card";
 import { ProfileCard } from "@/features/Profile/ui/profile-card";
 
-const Page = async ({ params }: { params: { newUser: boolean } }) => {
+const Page = async () => {
   const session = await getAppSessionServer();
   return (
     <div className="space-y-6 py-14 container  max-w-[600px]">
