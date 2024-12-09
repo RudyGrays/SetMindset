@@ -14,6 +14,7 @@ import Image from "next/image";
 import { AppLogo } from "@/shared/ui/app-logo";
 import { Suspense } from "react";
 import { Spinner } from "@/shared/ui/spinner";
+import { AuthMiddleware } from "@/features/Auth/model/middleware/auth.middleware";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -41,28 +42,22 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
-        <Suspense
-          fallback={
-            <div className="h-[100vh] w-[100vw] flex items-center justify-center">
-              <Spinner />
+        <AppProvider>
+          <AppSidebar />
+          <div className="w-full min-h-full flex flex-col">
+            <div className="flex pt-2 px-2 ">
+              <Header />
             </div>
-          }
-        >
-          <AppProvider>
-            <AppSidebar />
-            <div className="w-full h-full">
-              <div className="flex">
-                <Header />
-              </div>
 
-              <Container>
-                <main className="h-full px-2 py-2 flex justify-center">
+            <Container>
+              <main className=" px-2 py-2 h-[calc(100vh-60px-8px)]  flex w-full">
+                <div className="h-full w-full border rounded overflow-hidden">
                   {children}
-                </main>
-              </Container>
-            </div>
-          </AppProvider>
-        </Suspense>
+                </div>
+              </main>
+            </Container>
+          </div>
+        </AppProvider>
       </body>
     </html>
   );

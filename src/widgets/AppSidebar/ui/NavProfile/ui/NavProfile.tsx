@@ -37,7 +37,10 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-
+  const { setOpen, setOpenMobile } = useSidebar();
+  const closeSidebarHandler = () => {
+    setOpenMobile(false);
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -84,12 +87,12 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                <Link href={"/profile"}>Account</Link>
+
+                <Link href={"/profile"} onClick={closeSidebarHandler}>
+                  Account
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
+
               <DropdownMenuItem>
                 <Bell />
                 Notifications

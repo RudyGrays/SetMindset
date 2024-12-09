@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 
 const Page = () => {
   const session = useAppSession();
-  console.log(session);
+
   return <div>calendar</div>;
 };
 

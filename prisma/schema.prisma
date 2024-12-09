@@ -60,6 +60,9 @@ model User {
   accounts Account[]
   sessions Session[]
 
+  friends       Friend[] @relation("UserFriends")
+  friendsOfUser Friend[] @relation("FriendUsers")
+
   @@map("users")
 }
 
@@ -102,6 +105,25 @@ model Lesson {
 
   teacher User @relation("TeacherLessons", fields: [teacherId], references: [id], onDelete: Cascade)
   student User @relation("StudentLessons", fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Friend {
+  id       String           @id @default(cuid())
+  userId   String
+  friendId String
+  status   FriendshipStatus @default(PENDING)
+
+  user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
+  friend User @relation("FriendUsers", fields: [friendId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, friendId]) // Гарантирует, что пара "пользователь-друг" будет уникальной
+  @@map("friends")
+}
+
+enum FriendshipStatus {
+  PENDING // Ожидает подтверждения
+  ACCEPTED // Принято
+  REJECTED // Отклонено
 }
 
 enum Role {

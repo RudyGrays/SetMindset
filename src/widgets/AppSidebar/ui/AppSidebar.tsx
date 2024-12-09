@@ -15,6 +15,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/shared/ui/sidebar";
 import { NavUser } from "@/widgets/AppSidebar/ui/NavProfile/ui/NavProfile";
 
@@ -31,9 +32,17 @@ interface AppSidebarProps {
 
 const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
   const isMobile = useIsMobile();
-  const { data: sessionData } = useSession();
+  const session = useSession();
+  const { setOpen, setOpenMobile } = useSidebar();
+
+  const closeSidebarHandler = () => {
+    setOpenMobile(false);
+  };
+  const sessionData = session.data;
   const isAuth = !!sessionData;
-  const items = getSidebarItems(isAuth);
+  const tryAuth = session.status === "loading";
+
+  const items = getSidebarItems(isAuth, tryAuth);
   return (
     <div className="relative">
       <Sidebar collapsible="icon">
@@ -45,7 +54,7 @@ const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
                 {items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>
-                      <Link href={item.url}>
+                      <Link href={item.url} onClick={closeSidebarHandler}>
                         <item.icon />
                         <span>{item.title}</span>
                       </Link>

@@ -20,7 +20,7 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>{children}</SidebarProvider>
+          <SidebarProvider className="h-full">{children}</SidebarProvider>
         </ThemeProvider>
       </SessionProvider>
     </QueryClientProvider>

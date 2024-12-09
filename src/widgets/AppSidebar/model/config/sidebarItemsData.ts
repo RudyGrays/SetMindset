@@ -1,29 +1,29 @@
-import { Calendar, LogIn, Search, Settings, User, Video } from "lucide-react";
+import {
+  Calendar,
+  GraduationCap,
+  LogIn,
+  Search,
+  Settings,
+  User,
+  Users,
+  Video,
+} from "lucide-react";
 
-export const getSidebarItems = (isAuth: boolean) => {
-  if (!isAuth)
+export const getSidebarItems = (isAuth: boolean, tryAuth: boolean) => {
+  if (tryAuth && !isAuth) return [];
+  if (!isAuth && !tryAuth)
     return [{ title: "Log in", url: "/api/auth/signin", icon: LogIn }];
 
   return [
     {
-      title: "Calendar",
-      url: "/calendar",
-      icon: Calendar,
+      title: "Lessons",
+      url: "/lessons",
+      icon: GraduationCap,
     },
     {
-      title: "Search",
-      url: "/search",
-      icon: Search,
-    },
-    {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
-    },
-    {
-      title: "Call",
-      url: "/video",
-      icon: Video,
+      title: "Friends",
+      url: "/friends",
+      icon: Users,
     },
   ];
 };
