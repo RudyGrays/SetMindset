@@ -7,9 +7,10 @@ dotenv.config();
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOST_NAME;
-const port = process.env.HOST_PORT;
+const port = parseInt(process.env.HOST_PORT, 10) || 3000;
 
-const app = next({ dev, hostname, port: 3000 });
+const app = next({ dev, hostname, port });
+
 const handler = app.getRequestHandler();
 if (isNaN(port) || port <= 0 || port > 65535) {
   console.error("Неверный порт: должен быть числом от 1 до 65535.", port);
