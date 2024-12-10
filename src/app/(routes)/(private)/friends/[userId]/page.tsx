@@ -23,7 +23,7 @@ const Page = async ({ params }: { params: Promise<{ userId: string }> }) => {
 
   return (
     <div className="flex flex-col h-full  w-full p-2">
-      <UsersContainer selectedUser={currentUser!} />
+      <FriendsList user={currentUser!} />
     </div>
   );
 };

@@ -15,6 +15,7 @@ import { AppLogo } from "@/shared/ui/app-logo";
 import { Suspense } from "react";
 import { Spinner } from "@/shared/ui/spinner";
 import { AuthMiddleware } from "@/features/Auth/model/middleware/auth.middleware";
+import { SocketProvider } from "@/features/Socket/ui/socket-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

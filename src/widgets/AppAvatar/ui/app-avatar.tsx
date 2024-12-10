@@ -11,9 +11,11 @@ export const AppAvatar = ({
   username?: string;
 }) => {
   return (
-    <Avatar className={className}>
+    <Avatar className={`${className}`}>
       <AvatarImage src={image} alt={username} />
-      <AvatarFallback>CN</AvatarFallback>
+      <AvatarFallback className=" border border-secondary-foreground">
+        {username ? username.slice(0, 1) : "A"}
+      </AvatarFallback>
     </Avatar>
   );
 };

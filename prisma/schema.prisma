@@ -63,7 +63,36 @@ model User {
   friends       Friend[] @relation("UserFriends")
   friendsOfUser Friend[] @relation("FriendUsers")
 
+  chats1 Chat[] @relation("User1Chats")
+  chats2 Chat[] @relation("User2Chats")
+
+  messages Message[]
+
   @@map("users")
+}
+
+model Chat {
+  id       Int       @id @default(autoincrement())
+  user1Id  String
+  user2Id  String
+  user1    User      @relation("User1Chats", fields: [user1Id], references: [id])
+  user2    User      @relation("User2Chats", fields: [user2Id], references: [id])
+  messages Message[]
+
+  @@unique([user1Id, user2Id])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  chatId    Int
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  chat   Chat @relation(fields: [chatId], references: [id])
+  sender User @relation(fields: [senderId], references: [id])
+
+  @@index([chatId])
 }
 
 model VerificationToken {

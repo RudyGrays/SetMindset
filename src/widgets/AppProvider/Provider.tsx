@@ -1,4 +1,5 @@
 "use client";
+import { SocketProvider } from "@/features/Socket/ui/socket-provider";
 import { ThemeProvider } from "@/features/Theme/ui/ThemeProvider";
 import { queryClient } from "@/shared/api/query-client";
 import { SidebarProvider } from "@/shared/ui/sidebar";
@@ -14,14 +15,16 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme={"system"}
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SidebarProvider className="h-full">{children}</SidebarProvider>
-        </ThemeProvider>
+        <SocketProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme={"system"}
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider className="h-full">{children}</SidebarProvider>
+          </ThemeProvider>
+        </SocketProvider>
       </SessionProvider>
     </QueryClientProvider>
   );

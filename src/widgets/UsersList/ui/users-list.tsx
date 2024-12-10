@@ -6,52 +6,23 @@ import { MessageCircleMore, Phone, Video } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/shared/ui/button";
 import { UserEntity } from "@/entities/User/model/types/User";
+import { UsersListItem } from "./users-list-item";
+import { use } from "react";
+import { UserWithIsFriend } from "@/features/Friends/model/actions/getFriends";
 
 interface UserListProps {
-  users?: UserEntity[];
+  users?: UserWithIsFriend[];
 }
 
 const UsersList = ({ users }: UserListProps) => {
   return (
-    <ul className="flex flex-col w-full rounded p-3 bg-accent gap-4 max-w-[800px] h-full max-h-full custom-scrollbar overflow-auto">
-      {!users ? (
-        <div>Пустой список пользователей</div>
+    <ul className="flex flex-col w-full rounded p-3 bg-accent gap-5 max-w-[800px] h-full max-h-full custom-scrollbar overflow-auto">
+      {!users?.length ? (
+        <div>Пользователи не найдены...</div>
       ) : (
-        users.map((user) => (
-          <li key={user.id} className="">
-            <div className="p-2 flex justify-between items-center">
-              <div className="flex gap-2 items-center">
-                <Link href={`/profile/${user.id}`}>
-                  <AppAvatar
-                    className="border h-16 w-16"
-                    image={user.image!}
-                    username={user.name!}
-                  />
-                </Link>
-                <div className="flex flex-col gap-3">
-                  <p className="font-semibold px-2">{user.name}</p>
-                  <div className="flex gap-3">
-                    <Link
-                      href={`/chat/${user.id}`}
-                      className="flex gap-2 items-center hover:bg-background p-2 rounded"
-                    >
-                      <MessageCircleMore size={22} />
-                      <p className="text-sm">Написать</p>
-                    </Link>
-                    <Link
-                      href={`/call/${user.id}`}
-                      className="flex gap-2 items-center hover:bg-background p-2 rounded"
-                    >
-                      <Video size={22} />
-                      <p className="text-sm">Видеозвонок</p>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-              <UserOptions userId={user.id!} />
-            </div>
-          </li>
-        ))
+        users.map((user) => {
+          return <UsersListItem key={user.id} user={user} />;
+        })
       )}
     </ul>
   );

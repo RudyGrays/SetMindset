@@ -1,6 +1,12 @@
+"use server";
+
 import { dbClient } from "@/shared/db/prisma.client";
 import { FriendsRepository } from "../repository/repository";
 import { UserEntity } from "@/entities/User/model/types/User";
+
+export type UserWithIsFriend = UserEntity & {
+  isFriend: boolean;
+};
 
 export const getFriends = async (userId: string) => {
   const userWithFriends = await dbClient.user.findUnique({
@@ -13,7 +19,7 @@ export const getFriends = async (userId: string) => {
       },
     },
   });
-  console.log();
+
   if (userWithFriends && userWithFriends.friends) {
     const transformedFriends = userWithFriends.friends.map(
       (friendRecord) =>
@@ -24,7 +30,8 @@ export const getFriends = async (userId: string) => {
           image: friendRecord.friend.image,
           role: friendRecord.friend.role,
           name: friendRecord.friend.name,
-        } as UserEntity)
+          isFriend: true,
+        } as UserWithIsFriend)
     );
 
     return transformedFriends;

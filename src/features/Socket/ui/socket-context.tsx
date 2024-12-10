@@ -8,7 +8,9 @@ import {
 } from "react";
 import { io, Socket } from "socket.io-client";
 
-interface iSocketContext {}
+interface iSocketContext {
+  socket: Socket | null;
+}
 
 export const SocketContext = createContext<iSocketContext | null>(null);
 
@@ -53,7 +55,11 @@ export const SocketContextProvider = ({
     };
   }, [socket]);
 
-  return <SocketContext.Provider value={{}}>{children}</SocketContext.Provider>;
+  return (
+    <SocketContext.Provider value={{ socket }}>
+      {children}
+    </SocketContext.Provider>
+  );
 };
 
 export const useSocket = () => {

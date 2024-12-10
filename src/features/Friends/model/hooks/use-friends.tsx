@@ -1,11 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getFriends } from "../actions/getFriends";
+import { getFriends, UserWithIsFriend } from "../actions/getFriends";
 import { UserEntity } from "@/entities/User/model/types/User";
 
 interface UseFriendsResult {
-  friends: UserEntity[] | undefined | null;
+  friends: UserWithIsFriend[] | undefined | null;
   isLoading: boolean;
   isError: boolean;
 }

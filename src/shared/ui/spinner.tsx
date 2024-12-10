@@ -15,7 +15,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="x"
           begin="0;svgSpinnersBlocksShuffle3b.end"
-          dur="0.2s"
+          dur="0.1s"
           values="1;13"
         ></animate>
         <animate
@@ -23,7 +23,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="y"
           begin="svgSpinnersBlocksShuffle38.end"
-          dur="0.2s"
+          dur="0.1s"
           values="1;13"
         ></animate>
         <animate
@@ -31,7 +31,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="x"
           begin="svgSpinnersBlocksShuffle39.end"
-          dur="0.2s"
+          dur="0.1s"
           values="13;1"
         ></animate>
         <animate
@@ -39,7 +39,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="y"
           begin="svgSpinnersBlocksShuffle3a.end"
-          dur="0.2s"
+          dur="0.1s"
           values="13;1"
         ></animate>
       </rect>
@@ -49,7 +49,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="y"
           begin="svgSpinnersBlocksShuffle30.end"
-          dur="0.2s"
+          dur="0.1s"
           values="13;1"
         ></animate>
         <animate
@@ -57,7 +57,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="x"
           begin="svgSpinnersBlocksShuffle31.end"
-          dur="0.2s"
+          dur="0.1s"
           values="1;13"
         ></animate>
         <animate
@@ -65,7 +65,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="y"
           begin="svgSpinnersBlocksShuffle32.end"
-          dur="0.2s"
+          dur="0.1s"
           values="1;13"
         ></animate>
         <animate
@@ -73,7 +73,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="x"
           begin="svgSpinnersBlocksShuffle33.end"
-          dur="0.2s"
+          dur="0.1s"
           values="13;1"
         ></animate>
       </rect>
@@ -83,7 +83,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="x"
           begin="svgSpinnersBlocksShuffle34.end"
-          dur="0.2s"
+          dur="0.1s"
           values="13;1"
         ></animate>
         <animate
@@ -91,7 +91,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="y"
           begin="svgSpinnersBlocksShuffle35.end"
-          dur="0.2s"
+          dur="0.1s"
           values="13;1"
         ></animate>
         <animate
@@ -99,7 +99,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="x"
           begin="svgSpinnersBlocksShuffle36.end"
-          dur="0.2s"
+          dur="0.1s"
           values="1;13"
         ></animate>
         <animate
@@ -107,7 +107,7 @@ export function Spinner(props: SVGProps<SVGSVGElement>) {
           fill="freeze"
           attributeName="y"
           begin="svgSpinnersBlocksShuffle37.end"
-          dur="0.2s"
+          dur="0.1s"
           values="1;13"
         ></animate>
       </rect>

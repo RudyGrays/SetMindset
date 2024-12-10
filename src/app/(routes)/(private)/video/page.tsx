@@ -3,7 +3,7 @@ import { VideoCall } from "@/features/VideoCall/ui/video-call";
 import { useSession } from "next-auth/react";
 
 const Page = () => {
-  return <SocketProvider>Video</SocketProvider>;
+  return <div>Video</div>;
 };
 
 export default Page;

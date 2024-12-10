@@ -1,4 +1,5 @@
 import { UserEntity } from "@/entities/User/model/types/User";
+import { UserWithIsFriend } from "@/features/Friends/model/actions/getFriends";
 import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
@@ -10,8 +11,9 @@ import {
 } from "@/shared/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
 import { Ellipsis } from "lucide-react";
+import Link from "next/link";
 
-export const UserOptions = ({ userId }: { userId: string | number }) => {
+export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,9 +23,14 @@ export const UserOptions = ({ userId }: { userId: string | number }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/friends/${user.id}`}>Friends</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          {!user.isFriend && (
+            <Link href={`/friends/${user.id}`}>Add friend</Link>
+          )}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

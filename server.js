@@ -19,24 +19,25 @@ if (isNaN(port) || port <= 0 || port > 65535) {
 app.prepare().then(async () => {
   const httpServer = createServer(handler);
 
-  const users = {
-    5: {
-      isOnline: true,
-      profile: { name: "egor", id: 5 },
-      friends: [1, 3, 5],
-    },
-    1: {
-      isOnline: false,
-      profile: { name: "vasya", id: 1 },
-      friends: [5],
-    },
-  };
-
   const io = new Server(httpServer);
 
-  io.on("connection", (socket) => {
-    socket.on("addFriends", (value) => {});
-    console.log("client connected");
+  io.on("connection", (socket) => {});
+
+  io.on("sendMessage", async ({ chatId, senderId, content }) => {
+    const message = await dbClient.message.create({
+      data: {
+        chatId,
+        senderId,
+        content,
+      },
+    });
+
+    io.to(chatId).emit("receiveMessage", message);
+  });
+
+  io.on("joinChat", (chatId) => {
+    io.join(chatId);
+    console.log(`User joined chat ${chatId}`);
   });
 
   httpServer
