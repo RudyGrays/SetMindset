@@ -2,21 +2,24 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { sendMessage } from "../actions/send-message";
 import { Message } from "@prisma/client";
 
-export const useSendMessage = (
-  chatId: string,
-  senderId: string,
-  content: string
-) => {
+export const useSendMessage = () => {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: () => sendMessage(chatId, senderId, content),
+    mutationFn: (message: Message) => {
+      return sendMessage(
+        String(message.chatId),
+        message.senderId,
+        message.content
+      );
+    },
+
     onMutate: async (message: Message) => {
       await queryClient.cancelQueries({ queryKey: ["messages"] });
 
       const previousMessages = queryClient.getQueryData(["messages"]);
 
-      queryClient.setQueryData(["messages"], (old: Message[]) => [
+      queryClient.setQueryData(["messages"], (old: Message[] = []) => [
         ...old,
         message,
       ]);
@@ -27,10 +30,12 @@ export const useSendMessage = (
       queryClient.setQueryData(["messages"], context?.previousMessages);
     },
 
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["messages"] });
+    onSettled: (message) => {
+      queryClient.invalidateQueries({ queryKey: ["messages", message] });
     },
   });
 
-  return mutation;
+  return {
+    mutation,
+  };
 };

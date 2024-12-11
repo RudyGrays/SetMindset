@@ -3,7 +3,7 @@ import { Button } from "@/shared/ui/button";
 import { Spinner } from "@/shared/ui/spinner";
 import { Github } from "lucide-react";
 import { ClientSafeProvider } from "next-auth/react";
-import { useOAuthSignIn } from "../model/lib/use-oauth-sign-in";
+import { useOAuthSignIn } from "../model/hooks/use-oauth-sign-in";
 
 export function ProviderButton({ provider }: { provider: ClientSafeProvider }) {
   const oauthSignIn = useOAuthSignIn(provider);

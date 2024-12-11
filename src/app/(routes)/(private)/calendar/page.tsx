@@ -1,5 +1,5 @@
 "use client";
-import { useAppSession } from "@/features/Auth/model/actions/use-app-session";
+import { useAppSession } from "@/features/Auth/model/hooks/use-app-session";
 import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-session";
 import { getServerSession } from "next-auth";
 import { useSession } from "next-auth/react";

@@ -53,7 +53,11 @@ export const ChatMessage = ({
           </div>
         </div>
 
-        <div className="max-w-[70%] w-min  p-2 rounded-lg break-words  bg-primary-foreground">
+        <div
+          className={`max-w-[70%] w-max  p-2 rounded-lg break-words ${
+            isCurrentUser ? "bg-primary-foreground" : "bg-accent"
+          }`}
+        >
           {message.content}
         </div>
       </div>

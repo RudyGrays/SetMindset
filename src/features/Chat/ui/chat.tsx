@@ -2,7 +2,15 @@
 
 import { UserEntity } from "@/entities/User/model/types/User";
 import { Message } from "@prisma/client";
-import { FC, memo, useCallback, useEffect, useState } from "react";
+import {
+  FC,
+  KeyboardEvent,
+  memo,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { ChatMessage } from "./chat-message";
 import { Button } from "@/shared/ui/button";
 import { useSidebar } from "@/shared/ui/sidebar";
@@ -12,6 +20,8 @@ import { useMessages } from "../model/hooks/use-messages";
 import { useSendMessage } from "../model/hooks/use-send-message";
 
 import { nanoid } from "nanoid";
+import { formatDate } from "@/shared/lib/utils";
+import { ScrollArea } from "@/shared/ui/scroll-area";
 interface ChatProps {
   currentUser: UserEntity;
   user2: UserEntity;
@@ -23,38 +33,55 @@ export const Chat: FC<ChatProps> = memo(
   ({ currentUser, user2, currentUserMessages, user2Messages, chatId }) => {
     const [localMessages, setMessages] = useState<Message[]>([]);
     const [newMessageContent, setNewMessage] = useState("");
-
     const { socket } = useSocket();
-
     const { messages } = useMessages(localMessages);
+
+    const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      }
+    }, [messages]);
 
     const newMessageInputHandler = (value: string) => {
       setNewMessage(value);
     };
 
-    const mutation = useSendMessage(chatId, currentUser.id!, newMessageContent);
+    useEffect(() => {
+      socket?.emit("joinChat", chatId, currentUser.id);
+    }, [socket, chatId]);
+
+    const { mutation } = useSendMessage();
 
     const sendMessage = async () => {
-      console.log(newMessageContent);
-
+      if (newMessageContent.length === 0) return;
       const newMessage: Message = {
-        id: parseInt(nanoid(10), 36),
+        id: parseInt(nanoid(10), 36) + Date.now(),
         chatId: +chatId,
         content: newMessageContent,
         createdAt: new Date(),
         senderId: currentUser.id!,
       };
+      setMessages((prev) => [...prev, newMessage]);
 
-      socket?.emit("sendMessage", newMessage);
+      socket?.emit("sendMessage", chatId, newMessage);
 
       mutation.mutate(newMessage);
+      setNewMessage("");
     };
 
     useEffect(() => {
       socket?.on("receiveMessage", (message: Message) => {
+        console.log("receive");
+        if (message.senderId === currentUser.id) return;
         setMessages((prevMessages) => [...prevMessages, message]);
       });
-    }, [messages]);
+
+      return () => {
+        socket?.off("receiveMessage");
+      };
+    }, [socket, chatId, messages, currentUser.id]);
 
     const getUser = useCallback(
       (message: Message) =>
@@ -71,14 +98,15 @@ export const Chat: FC<ChatProps> = memo(
       if (user2Messages && user2Messages?.length > 0) {
         newMessages = [...newMessages, ...user2Messages];
       }
+
       setMessages(newMessages.toSorted((x, y) => +x.createdAt - +y.createdAt));
     }, [currentUserMessages, user2Messages]);
 
     return (
       <div className="max-h-full h-full max-w-[800px] w-full flex flex-col rounded gap-3">
-        <div className="max-h-[90%] h-full border rounded p-2 overflow-auto">
+        <ScrollArea className="max-h-[90%] h-full border rounded p-2 overflow-auto">
           {messages.length > 0 ? (
-            messages.map((message) => {
+            messages.map((message, id, arr) => {
               return (
                 <ChatMessage
                   message={message}
@@ -89,14 +117,22 @@ export const Chat: FC<ChatProps> = memo(
               );
             })
           ) : (
-            <div>Начните общение!</div>
+            <div className="flex h-full w-full items-center justify-center">
+              Начните общение!
+            </div>
           )}
-        </div>
+          <div ref={messagesEndRef} />
+        </ScrollArea>
         <div className="h-[10%] w-full flex justify-end items-center gap-2">
           <Input
             value={newMessageContent}
             onChange={(e) => newMessageInputHandler(e.target.value)}
             placeholder="Введите текст..."
+            onKeyDown={(e: KeyboardEvent) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
           />
           <Button onClick={sendMessage}>Отправить сообщение</Button>
         </div>
@@ -104,3 +140,4 @@ export const Chat: FC<ChatProps> = memo(
     );
   }
 );
+Chat.displayName = "Chat";

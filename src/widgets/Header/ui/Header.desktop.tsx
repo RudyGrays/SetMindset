@@ -6,6 +6,7 @@ import { Button } from "@/shared/ui/button";
 import { useSidebar } from "@/shared/ui/sidebar";
 import { BackButton } from "@/widgets/BackButton/ui/back-button";
 import DynamicBreadcrumb from "@/widgets/DynamicBreadcrumb/ui/DynamicBreadcrumb";
+import { Notifications } from "@/features/Notifications/ui/notifications";
 import { Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -25,11 +26,7 @@ export const HeaderDesktop: FC<HeaderProps> = () => {
         <BackButton />
         {session.status === "authenticated" && <DynamicBreadcrumb />}
       </div>
-      {isMobile && (
-        <Button variant={"ghost"} onClick={() => setOpenMobile(true)}>
-          <Menu />
-        </Button>
-      )}
+      <Notifications />
     </header>
   );
 };

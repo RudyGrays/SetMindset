@@ -73,9 +73,6 @@ const SheetContent = React.forwardRef<
           Боковая панель
         </SheetPrimitive.DialogDescription>
       </VisuallyHidden>
-      <SheetPrimitive.Close className="w-5 h-5 bg-primary absolute right-0 top-0 rounded-sm  ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary">
-        X
-      </SheetPrimitive.Close>
 
       {children}
     </SheetPrimitive.Content>

@@ -20,21 +20,38 @@ export const UsersRepository = {
       },
     });
 
-    const friends = await dbClient.friend.findMany({
+    const friendshipRequests = await dbClient.friend.findMany({
       where: {
         OR: [{ userId: currentUserId }, { friendId: currentUserId }],
       },
     });
 
-    const friendIds = friends.map((friend) =>
-      friend.userId === currentUserId ? friend.friendId : friend.userId
-    );
+    const friendIds = friendshipRequests
+      .filter((friendship) => friendship.status === "ACCEPTED")
+      .map((friendship) =>
+        friendship.userId === currentUserId
+          ? friendship.friendId
+          : friendship.userId
+      );
 
-    const usersWithIsFriend = users.map((user) => ({
-      ...user,
-      isFriend: friendIds.includes(user.id),
-    }));
+    const requestIds = friendshipRequests
+      .filter(
+        (friendship) =>
+          friendship.status === "PENDING" && friendship.userId === currentUserId
+      )
+      .map((friendship) => friendship.friendId);
 
-    return usersWithIsFriend;
+    const usersWithFriendStatus = users.map((user) => {
+      const isFriend = friendIds.includes(user.id);
+      const isRequest = requestIds.includes(user.id);
+
+      return {
+        ...user,
+        isFriend,
+        isRequest,
+      };
+    });
+
+    return usersWithFriendStatus;
   },
 };

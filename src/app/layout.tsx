@@ -16,6 +16,7 @@ import { Suspense } from "react";
 import { Spinner } from "@/shared/ui/spinner";
 import { AuthMiddleware } from "@/features/Auth/model/middleware/auth.middleware";
 import { SocketProvider } from "@/features/Socket/ui/socket-provider";
+import { Toaster } from "@/shared/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -44,21 +45,25 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full`}
       >
         <AppProvider>
-          <AppSidebar />
-          <div className="w-full min-h-full flex flex-col">
-            <div className="flex pt-2 px-2 ">
-              <Header />
+          <div className="flex w-full">
+            <div className="flex-shrink">
+              <AppSidebar />
             </div>
-
-            <Container>
-              <main className=" px-2 py-2 h-[calc(100vh-60px-8px)]  flex w-full">
-                <div className="h-full w-full border rounded overflow-hidden">
-                  {children}
-                </div>
-              </main>
-            </Container>
+            <div className="w-full min-h-full flex flex-col flex-grow">
+              <div className="flex pt-2 px-2 ">
+                <Header />
+              </div>
+              <Container>
+                <main className=" px-2 py-2 h-[calc(100vh-60px-8px)]  flex w-full">
+                  <div className="h-full w-full border rounded overflow-hidden">
+                    {children}
+                  </div>
+                </main>
+              </Container>
+            </div>
           </div>
         </AppProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -1,3 +1,5 @@
+"use server";
+
 import { FriendsRepository } from "../repository/repository";
 
 export const addFriend = async (requesterId: string, responderId: string) => {

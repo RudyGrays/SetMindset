@@ -9,6 +9,7 @@ import { UserEntity } from "@/entities/User/model/types/User";
 import { UsersListItem } from "./users-list-item";
 import { use } from "react";
 import { UserWithIsFriend } from "@/features/Friends/model/actions/getFriends";
+import { ScrollArea } from "@/shared/ui/scroll-area";
 
 interface UserListProps {
   users?: UserWithIsFriend[];
@@ -16,7 +17,7 @@ interface UserListProps {
 
 const UsersList = ({ users }: UserListProps) => {
   return (
-    <ul className="flex flex-col w-full rounded p-3 bg-accent gap-5 max-w-[800px] h-full max-h-full custom-scrollbar overflow-auto">
+    <ScrollArea className="flex flex-col w-full rounded p-3 bg-accent gap-5 max-w-[800px] max-h-full ">
       {!users?.length ? (
         <div>Пользователи не найдены...</div>
       ) : (
@@ -24,7 +25,7 @@ const UsersList = ({ users }: UserListProps) => {
           return <UsersListItem key={user.id} user={user} />;
         })
       )}
-    </ul>
+    </ScrollArea>
   );
 };
 

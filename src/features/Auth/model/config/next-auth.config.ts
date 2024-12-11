@@ -1,12 +1,30 @@
 import { dbClient } from "@/shared/db/prisma.client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
+import { nanoid } from "nanoid";
 import type { AuthOptions, User } from "next-auth";
+import { AdapterUser } from "next-auth/adapters";
 
 import Email from "next-auth/providers/email";
 import GitHubProvider from "next-auth/providers/github";
 
 export const authConfig: AuthOptions = {
-  adapter: PrismaAdapter(dbClient),
+  adapter: {
+    ...PrismaAdapter(dbClient),
+    createUser: async (user: AdapterUser) => {
+      const id = nanoid(40);
+      const newUser = await dbClient.user.create({
+        data: {
+          ...user,
+          id,
+          name: `guest${id.substring(0, 8)}`,
+        },
+      });
+
+      return {
+        ...newUser,
+      };
+    },
+  },
 
   callbacks: {
     session: async ({ session, user }) => {
@@ -16,6 +34,9 @@ export const authConfig: AuthOptions = {
           ...session.user,
           role: user.role,
           id: user.id,
+          name: session.user.name
+            ? session.user.name
+            : `guest@${user.id.split("").slice(0, 7).join("")}`,
         },
       };
     },

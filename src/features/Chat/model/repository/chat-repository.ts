@@ -19,7 +19,7 @@ export const ChatRepository = {
   },
 
   createChat: async (user1Id: string, user2Id: string) => {
-    return dbClient.chat.create({
+    return await dbClient.chat.create({
       data: {
         user1Id,
         user2Id,

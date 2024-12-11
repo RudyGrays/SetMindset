@@ -24,7 +24,7 @@ export const ChatGuardComponent = ({ chatId }: { chatId: string }) => {
   if (!chat) return <div>Чат не существует</div>;
 
   const isMyChat = chat.user1Id === myId || chat.user2Id === myId;
-
+  if (!isMyChat) return <div>Это не твой чат</div>;
   const currentUser = chat.user1Id === myId ? chat.user1 : chat.user2;
   const user2 = chat.user1Id === myId ? chat.user2 : chat.user1;
 

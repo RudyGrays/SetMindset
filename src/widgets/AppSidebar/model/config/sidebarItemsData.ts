@@ -2,6 +2,7 @@ import {
   Calendar,
   GraduationCap,
   LogIn,
+  MessageCircle,
   Search,
   Settings,
   User,
@@ -24,6 +25,11 @@ export const getSidebarItems = (isAuth: boolean, tryAuth: boolean) => {
       title: "Friends",
       url: "/friends",
       icon: Users,
+    },
+    {
+      title: "Chats",
+      url: "/chats",
+      icon: MessageCircle,
     },
   ];
 };

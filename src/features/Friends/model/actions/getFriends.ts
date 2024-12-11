@@ -6,36 +6,24 @@ import { UserEntity } from "@/entities/User/model/types/User";
 
 export type UserWithIsFriend = UserEntity & {
   isFriend: boolean;
+  isRequest?: boolean;
 };
 
 export const getFriends = async (userId: string) => {
-  const userWithFriends = await dbClient.user.findUnique({
-    where: { id: userId },
-    include: {
-      friends: {
-        include: {
-          friend: true,
-        },
-      },
-    },
-  });
+  const friends = await FriendsRepository.getFriends(userId);
 
-  if (userWithFriends && userWithFriends.friends) {
-    const transformedFriends = userWithFriends.friends.map(
-      (friendRecord) =>
-        ({
-          id: friendRecord.friend.id,
-          email: friendRecord.friend.email,
-          emailVerified: friendRecord.friend.emailVerified,
-          image: friendRecord.friend.image,
-          role: friendRecord.friend.role,
-          name: friendRecord.friend.name,
-          isFriend: true,
-        } as UserWithIsFriend)
-    );
+  const transformedFriends = friends.map(
+    (friendRecord) =>
+      ({
+        id: friendRecord.id,
+        email: friendRecord.email,
+        emailVerified: friendRecord.emailVerified,
+        image: friendRecord.image,
+        role: friendRecord.role,
+        name: friendRecord.name,
+        isFriend: true,
+      } as UserWithIsFriend)
+  );
 
-    return transformedFriends;
-  }
-
-  return [];
+  return transformedFriends;
 };

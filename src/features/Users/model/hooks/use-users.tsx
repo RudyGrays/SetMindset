@@ -20,7 +20,6 @@ export const useUsers = (
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users", userId, searchValue],
     queryFn: () => getUsers(userId, currentUserId, searchValue),
-    enabled: !!userId,
   });
 
   return {

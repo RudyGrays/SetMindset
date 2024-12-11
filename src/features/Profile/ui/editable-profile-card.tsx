@@ -19,6 +19,8 @@ import { Avatar } from "@/shared/ui/avatar";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { AvatarField } from "./avatar-field";
 import { Button } from "@/shared/ui/button";
+import { useUpdateProfile } from "@/features/Auth/model/hooks/use-update-profile";
+import { Spinner } from "@/shared/ui/spinner";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; //2mb
 
@@ -42,9 +44,14 @@ export const EditableProfileCard = ({ user }: { user: UserEntity }) => {
       image: user.image,
     },
   });
+  const { profileMutate, data, isPending } = useUpdateProfile();
 
   const onSubmit = (values: z.infer<typeof profileSchema>) => {
-    console.log(values);
+    profileMutate({
+      userId: user.id!,
+      name: values.name!,
+      image: values.image!,
+    });
   };
 
   return (
@@ -86,8 +93,8 @@ export const EditableProfileCard = ({ user }: { user: UserEntity }) => {
               )}
             />
 
-            <Button type="submit" className="w-max mt-5">
-              Сохранить
+            <Button disabled={isPending} type="submit" className="w-max mt-5">
+              {isPending ? <Spinner /> : "Сохранить"}
             </Button>
           </form>
         </Form>

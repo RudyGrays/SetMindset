@@ -1,15 +1,37 @@
-import { useQuery } from "@tanstack/react-query";
-import { addFriend } from "../actions/addFriend";
+"use client";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addFriend } from "../actions/addFriend"; // Предположим, у вас есть функция для добавления друга
+import { useSocket } from "@/features/Socket/ui/socket-context";
+import { Notification } from "@prisma/client";
+import { useCreateNotification } from "@/features/Notifications/model/hooks/use-create-notification";
 
 export const useAddFriend = (requesterId: string, responderId: string) => {
-  const { data, isPending, error } = useQuery({
-    queryKey: ["add-friend", requesterId, responderId],
-    queryFn: () => addFriend(requesterId, responderId),
+  const queryClient = useQueryClient();
+  const { socket } = useSocket();
+  const { mutate } = useCreateNotification({
+    message: "let`s be friends",
+    userId: responderId,
+    type: "request friend",
+    senderId: requesterId,
+  });
+
+  const mutation = useMutation({
+    mutationFn: () => addFriend(requesterId, responderId),
+    onSuccess: (data) => {
+      mutate();
+
+      queryClient.refetchQueries({
+        queryKey: ["users"],
+      });
+    },
+    onError: (error) => {
+      console.error("Error adding friend:", error);
+    },
   });
 
   return {
-    data,
-    isPending,
-    error,
+    addUserMutate: mutation.mutate,
+    data: mutation.data,
   };
 };

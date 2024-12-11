@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/shared/ui/button";
 import { Input } from "@/shared/ui/input";
 import { Spinner } from "@/shared/ui/spinner";
-import { useEmailSignIn } from "../model/lib/use-email-sign-in";
+import { useEmailSignIn } from "../model/hooks/use-email-sign-in";
 
 export function EmailSignInForm() {
   const form = useForm<{ email: string }>({

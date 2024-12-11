@@ -52,10 +52,10 @@ model User {
 
   role             Role       @default(USER)
   documents        Document[]
-  ratingsGiven     Rating[]   @relation("AuthorRatings") // Рейтинги, оставленные пользователем
-  ratings          Rating[]   @relation("UserRatings") // Рейтинги, полученные пользователем
-  lessonsAsTeacher Lesson[]   @relation("TeacherLessons") // Уроки, где пользователь является учителем
-  lessonsAsStudent Lesson[]   @relation("StudentLessons") // Уроки, где пользователь является учеником
+  ratingsGiven     Rating[]   @relation("AuthorRatings")
+  ratings          Rating[]   @relation("UserRatings")
+  lessonsAsTeacher Lesson[]   @relation("TeacherLessons")
+  lessonsAsStudent Lesson[]   @relation("StudentLessons")
 
   accounts Account[]
   sessions Session[]
@@ -63,10 +63,12 @@ model User {
   friends       Friend[] @relation("UserFriends")
   friendsOfUser Friend[] @relation("FriendUsers")
 
-  chats1 Chat[] @relation("User1Chats")
-  chats2 Chat[] @relation("User2Chats")
-
+  chats1   Chat[]    @relation("User1Chats")
+  chats2   Chat[]    @relation("User2Chats")
   messages Message[]
+
+  notifications     Notification[] @relation("UserNotifications")
+  notificationsSent Notification[] @relation("SenderNotifications")
 
   @@map("users")
 }
@@ -136,6 +138,20 @@ model Lesson {
   student User @relation("StudentLessons", fields: [studentId], references: [id], onDelete: Cascade)
 }
 
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  senderId  String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  type      String?
+
+  user   User @relation("UserNotifications", fields: [userId], references: [id]) // связь с получателем
+  sender User @relation("SenderNotifications", fields: [senderId], references: [id]) // связь с отправителем
+}
+
 model Friend {
   id       String           @id @default(cuid())
   userId   String
@@ -145,14 +161,14 @@ model Friend {
   user   User @relation("UserFriends", fields: [userId], references: [id], onDelete: Cascade)
   friend User @relation("FriendUsers", fields: [friendId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, friendId]) // Гарантирует, что пара "пользователь-друг" будет уникальной
+  @@unique([userId, friendId])
   @@map("friends")
 }
 
 enum FriendshipStatus {
-  PENDING // Ожидает подтверждения
-  ACCEPTED // Принято
-  REJECTED // Отклонено
+  PENDING
+  ACCEPTED
+  REJECTED
 }
 
 enum Role {

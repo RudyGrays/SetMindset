@@ -8,7 +8,6 @@ export const sendMessage = async (
   senderId: string,
   content: string
 ) => {
-  console.log(chatId, senderId, content);
   const message = await ChatRepository.addMessage(+chatId, senderId, content);
   return message;
 };

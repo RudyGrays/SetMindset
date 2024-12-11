@@ -35,7 +35,7 @@ export const UsersContainer = ({
   return (
     <div className="h-full flex flex-col p-3">
       <Input
-        className="max-w-[800px] mx-auto"
+        className="max-w-[800px] w-full mx-auto"
         value={searchValue}
         onChange={(e) => changeSearchValue(e.target.value)}
         placeholder="Поиск пользователя..."

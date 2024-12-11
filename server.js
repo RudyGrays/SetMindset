@@ -21,23 +21,30 @@ app.prepare().then(async () => {
 
   const io = new Server(httpServer);
 
-  io.on("connection", (socket) => {});
-
-  io.on("sendMessage", async ({ chatId, senderId, content }) => {
-    const message = await dbClient.message.create({
-      data: {
-        chatId,
-        senderId,
-        content,
-      },
+  io.on("connection", (socket) => {
+    socket.on("joinToNotifications", (userId) => {
+      const notificationsId = `notifications-${userId}`;
+      socket.join(notificationsId);
     });
 
-    io.to(chatId).emit("receiveMessage", message);
-  });
+    socket.on("sendNotification", (notification) => {
+      const { userId, message } = notification;
+      const notificationsId = `notifications-${userId}`;
 
-  io.on("joinChat", (chatId) => {
-    io.join(chatId);
-    console.log(`User joined chat ${chatId}`);
+      io.to(notificationsId).emit("addNotification", notification);
+    });
+
+    socket.on("joinChat", (chatId, userId) => {
+      socket.join(chatId);
+
+      socket.emit("chatJoined", `You have joined chat ${chatId}`);
+    });
+
+    socket.on("sendMessage", (chatId, message) => {
+      io.to(chatId).emit("receiveMessage", message);
+    });
+
+    socket.on("disconnect", () => {});
   });
 
   httpServer

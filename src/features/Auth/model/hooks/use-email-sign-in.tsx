@@ -10,7 +10,7 @@ export function useEmailSignIn() {
     mutationFn: (email: string) =>
       signIn("email", {
         email,
-        callbackUrl: "/",
+        callbackUrl: callbackUrl ?? "/",
       }),
   });
 
