@@ -28,8 +28,8 @@ export const AllUsersList = ({
     );
 
   return (
-    <div className="h-full   w-full  flex flex-col items-center justify-center  p-3 ">
-      <div>{`Users by ${searchValue ?? "..."}`}</div>
+    <div className="h-full   w-full  flex flex-col items-center  pt-6  p-3 ">
+      <div>{`Users by "${searchValue ?? "..."}"`}</div>
 
       <UsersList users={users!} />
     </div>

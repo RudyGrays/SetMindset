@@ -96,6 +96,7 @@ export const Chats = () => {
             console.log(chat.messages);
             return (
               <TableRow
+                className="bg-accent cursor-pointer"
                 key={chat.id}
                 onClick={(e: React.MouseEvent) => {
                   e.stopPropagation();

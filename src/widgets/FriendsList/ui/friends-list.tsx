@@ -18,7 +18,7 @@ export const FriendsList = ({
       </div>
     );
   return (
-    <div className="h-full   w-full  flex flex-col items-center justify-center  p-3 ">
+    <div className="h-full   w-full  flex flex-col items-center  p-3 pt-6">
       <div>{`${user.name}'s friends`}</div>
 
       <UsersList users={friends!} />

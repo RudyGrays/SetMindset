@@ -17,9 +17,9 @@ interface UserListProps {
 
 const UsersList = ({ users }: UserListProps) => {
   return (
-    <ScrollArea className="flex flex-col w-full rounded p-3 bg-accent gap-5 max-w-[800px] max-h-full ">
+    <ScrollArea className="flex flex-col w-full border-b  rounded p-3  gap-5 max-w-[800px] max-h-full ">
       {!users?.length ? (
-        <div>Пользователи не найдены...</div>
+        <div className="text-center">Пользователи не найдены...</div>
       ) : (
         users.map((user) => {
           return <UsersListItem key={user.id} user={user} />;
