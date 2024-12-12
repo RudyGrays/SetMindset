@@ -16,8 +16,6 @@ export const ChatMessage = ({
   message: Message;
   isCurrentUser: boolean;
 }) => {
-  const session = useSession();
-
   const messageDate = message.createdAt.toLocaleString("ru-RU", {
     day: "numeric",
     month: "short",

@@ -13,7 +13,7 @@ const Page = async () => {
         </p>
       </div>
 
-      <EditableProfileCard user={session?.user!} />
+      <EditableProfileCard user={session?.user!} isNew={true} />
     </div>
   );
 };

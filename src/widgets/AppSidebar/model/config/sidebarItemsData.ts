@@ -1,5 +1,6 @@
 import {
   Calendar,
+  FileSliders,
   GraduationCap,
   LogIn,
   MessageCircle,
@@ -10,11 +11,38 @@ import {
   Video,
 } from "lucide-react";
 
-export const getSidebarItems = (isAuth: boolean, tryAuth: boolean) => {
+export const getSidebarItems = (
+  isAuth: boolean,
+  tryAuth: boolean,
+  isAdmin?: boolean
+) => {
   if (tryAuth && !isAuth) return [];
   if (!isAuth && !tryAuth)
     return [{ title: "Log in", url: "/api/auth/signin", icon: LogIn }];
 
+  if (isAdmin)
+    return [
+      {
+        title: "AdminPanel",
+        url: "/admin-panel",
+        icon: FileSliders,
+      },
+      {
+        title: "Lessons",
+        url: "/lessons",
+        icon: GraduationCap,
+      },
+      {
+        title: "Friends",
+        url: "/friends",
+        icon: Users,
+      },
+      {
+        title: "Chats",
+        url: "/chats",
+        icon: MessageCircle,
+      },
+    ];
   return [
     {
       title: "Lessons",

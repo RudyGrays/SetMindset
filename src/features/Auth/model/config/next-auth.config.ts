@@ -17,9 +17,14 @@ export const authConfig: AuthOptions = {
           ...user,
           id,
           name: `guest${id.substring(0, 8)}`,
+          role:
+            user.email.toLocaleLowerCase() ===
+            process.env.ADMIN_EMAIL?.toLocaleLowerCase()
+              ? "ADMIN"
+              : "USER",
         },
       });
-
+      console.log(user.email, process.env.ADMIN_EMAIL);
       return {
         ...newUser,
       };

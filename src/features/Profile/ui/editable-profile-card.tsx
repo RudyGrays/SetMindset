@@ -21,6 +21,7 @@ import { AvatarField } from "./avatar-field";
 import { Button } from "@/shared/ui/button";
 import { useUpdateProfile } from "@/features/Auth/model/hooks/use-update-profile";
 import { Spinner } from "@/shared/ui/spinner";
+import { useRouter } from "next/navigation";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; //2mb
 
@@ -34,26 +35,34 @@ const profileSchema = z.object({
   image: z.string().optional().nullable(),
 });
 
-export const EditableProfileCard = ({ user }: { user: UserEntity }) => {
+export const EditableProfileCard = ({
+  user,
+  isNew,
+}: {
+  user: UserEntity;
+  isNew?: boolean;
+}) => {
   const form = useForm({
     resolver: zodResolver(profileSchema),
     reValidateMode: "onChange",
     mode: "onChange",
     defaultValues: {
       name: user.name,
-      image: user.image,
+      image: user.image || "",
     },
   });
   const { profileMutate, data, isPending } = useUpdateProfile();
-
+  const router = useRouter();
   const onSubmit = (values: z.infer<typeof profileSchema>) => {
     profileMutate({
       userId: user.id!,
       name: values.name!,
       image: values.image!,
     });
-  };
 
+    !isPending && isNew && router.push("/");
+  };
+  const { getValues } = form;
   return (
     <Card>
       <CardHeader>
@@ -65,17 +74,20 @@ export const EditableProfileCard = ({ user }: { user: UserEntity }) => {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col gap-5"
           >
+            <div className="flex w-full justify-center">
+              <AppAvatar
+                className="h-20 w-20"
+                image={getValues().image!}
+                username={user.name!}
+              />
+            </div>
             <FormField
               name="image"
-              disabled
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Аватар</FormLabel>
                   <FormControl>
-                    <AvatarField
-                      onChange={field.onChange}
-                      value={field.value}
-                    />
+                    <Input {...field} placeholder="Ссылка на картинку..." />
                   </FormControl>
                 </FormItem>
               )}
@@ -92,10 +104,15 @@ export const EditableProfileCard = ({ user }: { user: UserEntity }) => {
                 </FormItem>
               )}
             />
-
-            <Button disabled={isPending} type="submit" className="w-max mt-5">
-              {isPending ? <Spinner /> : "Сохранить"}
-            </Button>
+            {isNew ? (
+              <Button disabled={isPending} type="submit">
+                {isPending ? <Spinner /> : "Continue"}
+              </Button>
+            ) : (
+              <Button disabled={isPending} type="submit" className="w-max mt-5">
+                {isPending ? <Spinner /> : "Save changes"}
+              </Button>
+            )}
           </form>
         </Form>
       </CardContent>

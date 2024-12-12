@@ -42,7 +42,11 @@ const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
   const isAuth = !!sessionData;
   const tryAuth = session.status === "loading";
 
-  const items = getSidebarItems(isAuth, tryAuth);
+  const items = getSidebarItems(
+    isAuth,
+    tryAuth,
+    session.data?.user.role === "ADMIN"
+  );
   return (
     <div className="relative">
       <Sidebar collapsible="icon">
@@ -52,7 +56,7 @@ const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
             <SidebarGroupContent>
               <SidebarMenu>
                 {items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                  <SidebarMenuItem key={item?.title}>
                     <SidebarMenuButton asChild>
                       <Link href={item.url} onClick={closeSidebarHandler}>
                         <item.icon />

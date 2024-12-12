@@ -104,7 +104,7 @@ export const Chat: FC<ChatProps> = memo(
 
     return (
       <div className="max-h-full h-full max-w-[800px] w-full flex flex-col rounded gap-3">
-        <ScrollArea className="max-h-[90%] h-full border rounded p-2 overflow-auto">
+        <ScrollArea className="max-h-[90%] border h-full  rounded p-2 ">
           {messages.length > 0 ? (
             messages.map((message, id, arr) => {
               return (
@@ -117,7 +117,7 @@ export const Chat: FC<ChatProps> = memo(
               );
             })
           ) : (
-            <div className="flex h-full w-full items-center justify-center">
+            <div className="flex min-h-full  w-full items-center justify-center">
               Начните общение!
             </div>
           )}
