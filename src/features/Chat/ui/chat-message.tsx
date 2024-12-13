@@ -25,7 +25,9 @@ export const ChatMessage = ({
 
   return (
     <div
-      className={`flex items-center mt-2 ${isCurrentUser ? "justify-end" : ""}`}
+      className={`flex max-w-full  flex-shrink  items-center mt-2 ${
+        isCurrentUser ? "justify-end" : ""
+      }`}
     >
       <div
         className={`flex flex-col w-full gap-3 ${
@@ -52,7 +54,7 @@ export const ChatMessage = ({
         </div>
 
         <div
-          className={`max-w-[70%] w-max  p-2 rounded-lg break-words ${
+          className={`max-w-[50%] w-max  p-2 rounded-lg break-words ${
             isCurrentUser ? "bg-primary-foreground" : "bg-accent"
           }`}
         >

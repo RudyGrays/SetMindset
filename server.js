@@ -2,6 +2,7 @@ import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
+import { on } from "node:events";
 
 dotenv.config();
 
@@ -16,12 +17,29 @@ if (isNaN(port) || port <= 0 || port > 65535) {
   console.error("Неверный порт: должен быть числом от 1 до 65535.", port);
   process.exit(1);
 }
+
 app.prepare().then(async () => {
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer);
 
+  let onlineUsers = [];
+
   io.on("connection", (socket) => {
+    socket.on("newOnlineUser", (newUser) => {
+      console.log(newUser);
+      if (!onlineUsers.some((user) => user.userId === newUser.id)) {
+        onlineUsers.push({
+          userId: newUser.id,
+          socketId: socket.id,
+          profile: newUser,
+        });
+      }
+
+      console.log(onlineUsers);
+      socket.emit("getOnlineUsers", onlineUsers);
+    });
+
     socket.on("joinToNotifications", (userId) => {
       const notificationsId = `notifications-${userId}`;
       socket.join(notificationsId);
@@ -44,7 +62,22 @@ app.prepare().then(async () => {
       io.to(chatId).emit("receiveMessage", message);
     });
 
-    socket.on("disconnect", () => {});
+    socket.on("disconnect", () => {
+      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+
+      socket.emit("getOnlineUsers", onlineUsers);
+    });
+
+    //call events
+    const onCall = async (participants) => {
+      if (participants.receiver.socketId) {
+        io.to(participants.receiver.socketId).emit(
+          "incomingCall",
+          participants
+        );
+      }
+    };
+    socket.on("call", onCall);
   });
 
   httpServer

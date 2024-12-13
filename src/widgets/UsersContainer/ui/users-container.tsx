@@ -33,18 +33,23 @@ export const UsersContainer = ({
   );
 
   return (
-    <div className="h-full flex flex-col p-3">
-      <Input
-        className="max-w-[800px] w-full mx-auto"
-        value={searchValue}
-        onChange={(e) => changeSearchValue(e.target.value)}
-        placeholder="Поиск пользователя..."
-      />
-      {searchType === "friends" ? (
-        <FriendsList user={selectedUser} />
-      ) : (
-        <AllUsersList searchValue={debouncedSearchValue} user={selectedUser} />
-      )}
+    <div className="h-full">
+      <div className="max-w-[800px] border rounded w-full mx-auto p-3">
+        <Input
+          className=""
+          value={searchValue}
+          onChange={(e) => changeSearchValue(e.target.value)}
+          placeholder="Поиск пользователя..."
+        />
+        {searchType === "friends" ? (
+          <FriendsList user={selectedUser} />
+        ) : (
+          <AllUsersList
+            searchValue={debouncedSearchValue}
+            user={selectedUser}
+          />
+        )}
+      </div>
     </div>
   );
 };

@@ -24,7 +24,9 @@ const DynamicBreadcrumb = () => {
         <BreadcrumbItem className="gap-0" key={href}>
           <BreadcrumbLink asChild>
             <Link href={href}>
-              {segment.charAt(0).toUpperCase() + segment.slice(1)}
+              {segment.charAt(0).toUpperCase() +
+                segment.slice(1, 5) +
+                `${segment.length > 10 ? "..." : ""}`}
             </Link>
           </BreadcrumbLink>
           <Slash height={"15px"} />

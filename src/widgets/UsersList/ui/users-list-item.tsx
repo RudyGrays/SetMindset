@@ -19,17 +19,12 @@ import { useUsers } from "@/features/Users/model/hooks/use-users";
 export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
   const session = useSession();
   const { chats } = useChat(user.id!);
-
+  const { onlineUsers, handleCall } = useSocket();
   const myId = session.data?.user.id;
-  const haveChatWithMe = chats?.reduce((acc, item) => {
-    if (
-      item.user1Id === session.data?.user.id ||
-      item.user2Id === session.data?.user.id
-    ) {
-      return true;
-    }
-    return acc;
-  }, false);
+
+  const receiverSocketUser = onlineUsers?.find(
+    (ruser) => ruser.userId === user.id
+  );
 
   const chatIdWithUser = chats?.find(
     (chat) => chat.user1Id === myId || chat.user2Id === myId
@@ -70,13 +65,18 @@ export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
                   <MessageCircleMore size={22} />
                   Message
                 </Button>
-                <Link
-                  href={`/call/${user.id}`}
+                <Button
+                  variant={"ghost"}
+                  onClick={() => {
+                    if (!receiverSocketUser) return;
+                    handleCall(receiverSocketUser);
+                    router.push(`/video-call/${user.id}`);
+                  }}
                   className="flex gap-2 items-center hover:bg-background p-2 rounded"
                 >
                   <Video size={22} />
                   <p className="text-sm">Videocall</p>
-                </Link>
+                </Button>
               </div>
             )}
             {!user.isFriend && !user.isRequest && (
