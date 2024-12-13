@@ -21,7 +21,7 @@ export const VideoContainer: FC<VideoContainerProps> = ({
   return (
     <video
       ref={videoRef}
-      className="rounded border w-full h-full"
+      className="rounded border"
       autoPlay
       playsInline
       muted={isLocalStream}

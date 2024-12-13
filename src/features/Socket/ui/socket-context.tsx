@@ -20,6 +20,7 @@ interface iSocketContext {
   localStream?: MediaStream;
   handleJoinCall: (call: Call) => void;
   call?: Call;
+  peer?: PeerData;
 }
 export interface SocketUser {
   userId: string;
@@ -163,20 +164,6 @@ export const SocketContextProvider = ({
 
   const handleHangup = useCallback(({}) => {}, []);
 
-  const handleCancelCall = useCallback(
-    (receiver: SocketUser) => {
-      if (!currentSocketUser) return;
-      const participants: Participants = {
-        caller: currentSocketUser,
-        receiver: receiver,
-      };
-
-      setCall({ participants, isRinging: false });
-      socket?.emit("call", participants);
-    },
-    [socket, currentSocketUser, call]
-  );
-
   const onIncomingCallHandle = useCallback(
     (participants: Participants) => {
       setCall({
@@ -207,6 +194,7 @@ export const SocketContextProvider = ({
           ],
         },
       ];
+
       const peer = new Peer({
         stream,
         initiator,
@@ -214,41 +202,98 @@ export const SocketContextProvider = ({
         config: { iceServers },
       });
 
-      peer.on("stream", (stream) => {
+      peer.on("signal", (data: SignalData) => {
         setPeer((prevPeer) => {
           if (prevPeer) {
             return { ...prevPeer, stream };
           }
           return prevPeer;
         });
+
+        // Emit signal to the server
+        if (socket) {
+          socket.emit("webrtcSignal", {
+            sdp: data,
+            ongoingCall: call,
+            isCaller: initiator,
+          });
+        }
       });
 
-      peer.on("error", console.error);
-      peer.on("close", () => handleHangup({}));
-      const rtcPeerConnection: RTCPeerConnection = (peer as any)._pc;
+      peer.on("connect", () => {
+        console.log("Peer connection established.");
+        // You can handle actions after the connection is established
+      });
 
-      rtcPeerConnection.onconnectionstatechange = async () => {
-        if (
-          rtcPeerConnection.iceConnectionState === "disconnected" ||
-          rtcPeerConnection.iceConnectionState === "failed"
-        ) {
-          handleHangup({});
-        }
-      };
+      peer.on("close", () => {
+        console.log("Peer connection closed.");
+        // You can handle cleanup actions when the connection is closed
+      });
+
+      peer.on("error", (error) => {
+        console.error("Error in peer connection:", error);
+        // You can handle error events here
+      });
+
       return peer;
     },
-    [call, setPeer]
+    [call, setPeer, socket]
+  );
+
+  const completePeerConnection = useCallback(
+    async (connectionData: {
+      sdp: SignalData;
+      ongoingCall: Call;
+      isCaller: boolean;
+    }) => {
+      if (!localStream) {
+        console.log("Missing the localstream");
+        return;
+      }
+
+      if (peer) {
+        peer.peerConnection.signal(connectionData.sdp);
+        return;
+      }
+
+      const newPeer = createPeer(localStream, true);
+
+      setPeer({
+        peerConnection: newPeer,
+        partipantUser: connectionData.ongoingCall.participants.receiver,
+        stream: undefined,
+      });
+
+      newPeer.on("signal", async (data: SignalData) => {
+        if (socket) {
+          socket.emit("webrtcSignal", {
+            sdp: data,
+            ongoingCall: call,
+            isCaller: true,
+          });
+        }
+      });
+    },
+    [localStream, createPeer, peer, call]
   );
 
   useEffect(() => {
     if (!socket || !socket.connected || !session) return;
 
     socket.on("incomingCall", onIncomingCallHandle);
+    socket.on("webrtcSignal", completePeerConnection);
 
     return () => {
       socket.off("incomingCall", onIncomingCallHandle);
+      socket.off("webrtcSignal", completePeerConnection);
     };
-  }, [socket, isSocketConnected, session]);
+  }, [
+    socket,
+    isSocketConnected,
+    session,
+    completePeerConnection,
+    onIncomingCallHandle,
+  ]);
 
   useEffect(() => {
     if (status === "loading" || !session) {
@@ -312,6 +357,7 @@ export const SocketContextProvider = ({
         localStream,
         call,
         onlineUsers,
+        peer,
       }}
     >
       {children}

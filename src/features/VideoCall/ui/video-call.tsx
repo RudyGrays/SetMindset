@@ -13,7 +13,8 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export const VideoCall = ({ userId }: { userId: string }) => {
-  const { socket, handleCall, onlineUsers, localStream } = useSocket();
+  const { socket, call, handleCall, peer, onlineUsers, localStream } =
+    useSocket();
 
   const [isMicOn, setIsMicOn] = useState<boolean>(false);
   const [isVidOn, setIsVidOn] = useState<boolean>(false);
@@ -64,16 +65,19 @@ export const VideoCall = ({ userId }: { userId: string }) => {
     }
   };
 
+  const isOnCall = localStream && peer && call ? true : false;
   return (
     <div className="rounded w-full max-w-[800px] max-h-full flex flex-col items-center gap-1">
       <div className="h-1/2 relative">
         {localStream ? (
           <>
-            <VideoContainer
-              stream={localStream}
-              isLocalStream={true}
-              isOnCall={false}
-            />
+            {peer && peer.stream && (
+              <VideoContainer
+                stream={peer?.stream}
+                isLocalStream={false}
+                isOnCall={isOnCall}
+              />
+            )}
             <div
               className="absolute cursor-pointer top-3 left-4"
               onClick={toggleCamera}
