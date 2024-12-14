@@ -29,7 +29,7 @@ const Page = async ({ params }: { params: Promise<{ userId: string }> }) => {
   const isAdmin = session?.user.role === "ADMIN";
 
   return (
-    <div className="space-y-6 py-14 container  max-w-[600px]">
+    <div className="space-y-6 py-14 container h-[calc(100vh-60px-8px)] max-w-[600px]">
       {isAdmin ? (
         <EditableProfileCard user={user} />
       ) : (

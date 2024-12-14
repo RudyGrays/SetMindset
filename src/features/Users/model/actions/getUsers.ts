@@ -10,7 +10,7 @@ export const getUsers = async (
   searchValue?: string
 ) => {
   const users = UsersRepository.getUsers(userId, currentUserId, searchValue);
-  console.log("revalidate");
+
   if (users) return users;
 
   return [];

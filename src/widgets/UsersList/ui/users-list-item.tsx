@@ -15,6 +15,7 @@ import { useAddFriend } from "@/features/Friends/model/hooks/use-add-friend";
 import { useCreateNotification } from "@/features/Notifications/model/hooks/use-create-notification";
 import { queryClient } from "@/shared/api/query-client";
 import { useUsers } from "@/features/Users/model/hooks/use-users";
+import { CallButton } from "@/widgets/CallButton/ui/call-button";
 
 export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
   const session = useSession();
@@ -65,18 +66,7 @@ export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
                   <MessageCircleMore size={22} />
                   Message
                 </Button>
-                <Button
-                  variant={"ghost"}
-                  onClick={() => {
-                    if (!receiverSocketUser) return;
-                    handleCall(receiverSocketUser);
-                    router.push(`/video-call/${user.id}`);
-                  }}
-                  className="flex gap-2 items-center hover:bg-background p-2 rounded"
-                >
-                  <Video size={22} />
-                  <p className="text-sm">Videocall</p>
-                </Button>
+                {/* <CallButton userId={user.id} /> */}
               </div>
             )}
             {!user.isFriend && !user.isRequest && (

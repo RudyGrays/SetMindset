@@ -8,6 +8,10 @@ import Email from "next-auth/providers/email";
 import GitHubProvider from "next-auth/providers/github";
 
 export const authConfig: AuthOptions = {
+  session: {
+    maxAge: 24 * 60 * 60, // Установите максимальный срок действия сессии на 24 часа
+    updateAge: 60 * 60, // Каждый час будет обновляться сессия, если она активна
+  },
   adapter: {
     ...PrismaAdapter(dbClient),
     createUser: async (user: AdapterUser) => {

@@ -15,6 +15,18 @@ export const UsersRepository = {
           OR: [
             { email: { contains: searchValue, mode: "insensitive" } },
             { name: { contains: searchValue, mode: "insensitive" } },
+            {
+              subjects: {
+                some: {
+                  name: { contains: searchValue, mode: "insensitive" },
+                  documents: {
+                    some: {
+                      isOk: true,
+                    },
+                  },
+                },
+              },
+            },
           ],
         }),
       },

@@ -48,7 +48,6 @@ export const Chats = () => {
         </TableHeader>
         <TableBody>
           {chats?.map((chat) => {
-            console.log(chat.messages);
             return (
               <TableRow
                 className="bg-accent cursor-pointer"

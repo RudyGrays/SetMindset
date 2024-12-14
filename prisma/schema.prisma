@@ -50,12 +50,17 @@ model User {
   emailVerified DateTime? @map("email_verified")
   image         String?
 
+  online Boolean?
+
   role             Role       @default(USER)
+  subjects         Subject[]  @relation("UserSubjects")
   documents        Document[]
   ratingsGiven     Rating[]   @relation("AuthorRatings")
   ratings          Rating[]   @relation("UserRatings")
   lessonsAsTeacher Lesson[]   @relation("TeacherLessons")
   lessonsAsStudent Lesson[]   @relation("StudentLessons")
+
+  canTeach Boolean @default(false)
 
   accounts Account[]
   sessions Session[]
@@ -71,6 +76,24 @@ model User {
   notificationsSent Notification[] @relation("SenderNotifications")
 
   @@map("users")
+}
+
+model Subject {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  users     User[]     @relation("UserSubjects")
+  documents Document[]
+}
+
+model Document {
+  id        Int     @id @default(autoincrement())
+  filename  String
+  filePath  String
+  isOk      Boolean @default(false)
+  subjectId Int
+  userId    String
+  subject   Subject @relation(fields: [subjectId], references: [id])
+  user      User    @relation(fields: [userId], references: [id])
 }
 
 model Chat {
@@ -106,15 +129,6 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Document {
-  id       String    @id @default(cuid())
-  userId   String
-  filePath String
-  status   DocStatus @default(PENDING)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
 model Rating {
   id       String  @id @default(cuid())
   userId   String
@@ -130,8 +144,7 @@ model Lesson {
   id        String   @id @default(cuid())
   teacherId String
   studentId String
-  startTime DateTime
-  endTime   DateTime
+  date      DateTime
   price     Float
 
   teacher User @relation("TeacherLessons", fields: [teacherId], references: [id], onDelete: Cascade)

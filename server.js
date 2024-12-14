@@ -2,7 +2,6 @@ import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
-import { on } from "node:events";
 
 dotenv.config();
 
@@ -26,20 +25,6 @@ app.prepare().then(async () => {
   let onlineUsers = [];
 
   io.on("connection", (socket) => {
-    socket.on("newOnlineUser", (newUser) => {
-      console.log(newUser);
-      if (!onlineUsers.some((user) => user.userId === newUser.id)) {
-        onlineUsers.push({
-          userId: newUser.id,
-          socketId: socket.id,
-          profile: newUser,
-        });
-      }
-
-      console.log(onlineUsers);
-      socket.emit("getOnlineUsers", onlineUsers);
-    });
-
     socket.on("joinToNotifications", (userId) => {
       const notificationsId = `notifications-${userId}`;
       socket.join(notificationsId);
@@ -62,42 +47,55 @@ app.prepare().then(async () => {
       io.to(chatId).emit("receiveMessage", message);
     });
 
-    socket.on("disconnect", () => {
-      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
-
+    socket.on("newOnlineUser", async (newUser) => {
+      if (!onlineUsers.some((user) => user.userId === newUser.id)) {
+        onlineUsers.push({
+          userId: newUser.id,
+          socketId: socket.id,
+          profile: newUser,
+        });
+      }
+      console.log("currentOnlineUsers", onlineUsers);
       socket.emit("getOnlineUsers", onlineUsers);
     });
 
-    //call events
-    const onCall = async (participants) => {
+    socket.on("call", (participants) => {
+      console.log(
+        "Incoming call from",
+        participants.caller.userId,
+        "to",
+        participants.receiver.userId
+      );
       if (participants.receiver.socketId) {
         io.to(participants.receiver.socketId).emit(
           "incomingCall",
           participants
         );
       }
-    };
-    const onWebRTCSignal = async (data) => {
-      if (data.isCaller) {
-        if (data.ongoingCall.participants.receiver.socketId) {
-          io.to(data.ongoingCall.participants.receiver.socketId).emit(
-            "webrtcSignal",
+    });
+
+    socket.on("webrtcSignal", (data) => {
+      console.log("Received WebRTC signal:", data);
+      const { isCaller, ongoingCall } = data;
+
+      if (isCaller) {
+        if (ongoingCall.participants.receiver.socketId) {
+          io.to(ongoingCall.participants.receiver.socketId).emit(
+            "webrtcSignalOn",
             data
           );
         }
       } else {
-        if (data.ongoingCall.participants.caller.socketId) {
-          io.to(data.ongoingCall.participants.caller.socketId).emit(
-            "webrtcSignal",
+        if (ongoingCall.participants.caller.socketId) {
+          io.to(ongoingCall.participants.caller.socketId).emit(
+            "webrtcSignalOn",
             data
           );
         }
       }
-    };
-    socket.on("call", onCall);
-    socket.on("webrtcSignal", onWebRTCSignal);
+    });
   });
-
+  io.on("disconnect", async (socket) => {});
   httpServer
     .once("error", (err) => {
       console.error(err);

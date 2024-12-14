@@ -14,7 +14,7 @@ interface AppProviderProps {
 export const AppProvider: FC<AppProviderProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider>
+      <SessionProvider refetchOnWindowFocus={false}>
         <SocketProvider>
           <ThemeProvider
             attribute="class"

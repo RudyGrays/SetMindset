@@ -73,7 +73,6 @@ export const Chat: FC<ChatProps> = memo(
 
     useEffect(() => {
       socket?.on("receiveMessage", (message: Message) => {
-        console.log("receive");
         if (message.senderId === currentUser.id) return;
         setMessages((prevMessages) => [...prevMessages, message]);
       });

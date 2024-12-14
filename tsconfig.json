@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -32,7 +32,8 @@
     "src/**/*.tsx",
     "src/types/**/*.d.ts",
     "server.js",
-    "tailwind.config.mts"
+    "tailwind.config.mts",
+    "tailwind.config.js"
   ],
   "exclude": ["node_modules"]
 }

@@ -16,7 +16,6 @@ export const useUsers = (
   currentUserId: string,
   searchValue?: string
 ): UseFriendsResult => {
-  console.log("from useUsers", searchValue);
   const { data, isLoading, isError } = useQuery({
     queryKey: ["users", userId, searchValue],
     queryFn: () => getUsers(userId, currentUserId, searchValue),

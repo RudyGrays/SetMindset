@@ -12,8 +12,10 @@ import {
 import { io, Socket } from "socket.io-client";
 import Peer, { SignalData } from "simple-peer";
 import { useRouter } from "next/navigation";
+import { addOnlineUser } from "../model/actions/add-online-user";
+import { removeOnlineUser } from "../model/actions/remove-online-user";
 interface iSocketContext {
-  socket: Socket | null;
+  socket?: Socket;
   isSocketConnected: boolean;
   handleCall: (receiver: SocketUser) => void;
   onlineUsers?: SocketUser[];
@@ -51,7 +53,7 @@ export const SocketContextProvider = ({
   children: ReactNode;
 }) => {
   const { data: session, status } = useSession();
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket, setSocket] = useState<Socket>();
   const [isSocketConnected, setSocketIsConnected] = useState<boolean>(false);
   const [peer, setPeer] = useState<PeerData>();
 
@@ -60,10 +62,10 @@ export const SocketContextProvider = ({
   const myId = session?.user.id;
   //onlineUsers
   const [onlineUsers, setOnlineUsers] = useState<SocketUser[]>([]);
+
   const currentSocketUser = onlineUsers?.find(
     (onlineUser) => onlineUser.userId === myId
   );
-  console.log(onlineUsers);
 
   //stream
   const [localStream, setLocalStream] = useState<MediaStream>();
@@ -125,24 +127,28 @@ export const SocketContextProvider = ({
         stream: undefined,
       });
 
-      newPeer.on("signal", async (data: SignalData) => {
+      const signal = async (data: SignalData) => {
         if (socket) {
-          console.log("emit offer");
           socket.emit("webrtcSignal", {
             sdp: data,
             ongoingCall: call,
             isCaller: false,
           });
         }
-      });
+      };
 
-      router.push(`/video-call/${call.participants.caller.userId}`);
+      newPeer.on("signal", signal);
+
+      return () => {
+        newPeer.off("signal", signal);
+      };
     },
     [socket, currentSocketUser]
   );
 
   const handleCall = useCallback(
     async (receiver: SocketUser) => {
+      if (call) return;
       if (!currentSocketUser || !socket) return;
 
       const stream = await getMediaStream();
@@ -171,7 +177,7 @@ export const SocketContextProvider = ({
         isRinging: true,
       });
     },
-    [socket, currentSocketUser, call]
+    [socket, currentSocketUser, setCall]
   );
 
   //peer
@@ -183,14 +189,7 @@ export const SocketContextProvider = ({
           urls: [
             "stun:stun.l.google.com:19302",
             "stun:stun.l.google.com:5349",
-            "stun:stun1.l.google.com:3478",
-            "stun:stun1.l.google.com:5349",
-            "stun:stun2.l.google.com:19302",
-            "stun:stun2.l.google.com:5349",
-            "stun:stun3.l.google.com:3478",
-            "stun:stun3.l.google.com:5349",
-            "stun:stun4.l.google.com:19302",
-            "stun:stun4.l.google.com:5349",
+            "stun:stun1.l.google.com:19302",
           ],
         },
       ];
@@ -202,42 +201,30 @@ export const SocketContextProvider = ({
         config: { iceServers },
       });
 
-      peer.on("signal", (data: SignalData) => {
+      peer.on("stream", (stream) => {
         setPeer((prevPeer) => {
           if (prevPeer) {
             return { ...prevPeer, stream };
           }
           return prevPeer;
         });
+      });
 
-        // Emit signal to the server
-        if (socket) {
-          socket.emit("webrtcSignal", {
-            sdp: data,
-            ongoingCall: call,
-            isCaller: initiator,
-          });
+      peer.on("error", (err) => console.log("Ошибка пира ", err));
+      peer.on("close", () => handleHangup({}));
+      const rtcPeerConnection: RTCPeerConnection = (peer as any)._pc;
+
+      rtcPeerConnection.oniceconnectionstatechange = async () => {
+        if (
+          rtcPeerConnection.iceConnectionState === "disconnected" ||
+          rtcPeerConnection.iceConnectionState === "failed"
+        ) {
+          handleHangup({});
         }
-      });
-
-      peer.on("connect", () => {
-        console.log("Peer connection established.");
-        // You can handle actions after the connection is established
-      });
-
-      peer.on("close", () => {
-        console.log("Peer connection closed.");
-        // You can handle cleanup actions when the connection is closed
-      });
-
-      peer.on("error", (error) => {
-        console.error("Error in peer connection:", error);
-        // You can handle error events here
-      });
-
+      };
       return peer;
     },
-    [call, setPeer, socket]
+    [call, setPeer]
   );
 
   const completePeerConnection = useCallback(
@@ -253,6 +240,7 @@ export const SocketContextProvider = ({
 
       if (peer) {
         peer.peerConnection.signal(connectionData.sdp);
+        console.log("peer created return");
         return;
       }
 
@@ -264,15 +252,21 @@ export const SocketContextProvider = ({
         stream: undefined,
       });
 
-      newPeer.on("signal", async (data: SignalData) => {
+      const signal = async (data: SignalData) => {
         if (socket) {
+          console.log("emit offer");
           socket.emit("webrtcSignal", {
             sdp: data,
             ongoingCall: call,
             isCaller: true,
           });
         }
-      });
+      };
+      newPeer.on("signal", signal);
+
+      return () => {
+        newPeer.off("signal", signal);
+      };
     },
     [localStream, createPeer, peer, call]
   );
@@ -281,11 +275,11 @@ export const SocketContextProvider = ({
     if (!socket || !socket.connected || !session) return;
 
     socket.on("incomingCall", onIncomingCallHandle);
-    socket.on("webrtcSignal", completePeerConnection);
+    socket.on("webrtcSignalOn", completePeerConnection);
 
     return () => {
       socket.off("incomingCall", onIncomingCallHandle);
-      socket.off("webrtcSignal", completePeerConnection);
+      socket.off("webrtcSignalOn", completePeerConnection);
     };
   }, [
     socket,
@@ -296,23 +290,21 @@ export const SocketContextProvider = ({
   ]);
 
   useEffect(() => {
-    if (status === "loading" || !session) {
-      return;
-    }
-
     const newSocket = io();
     setSocket(newSocket);
 
     return () => {
       newSocket.disconnect();
     };
-  }, [status, session]);
+  }, [session]);
 
   useEffect(() => {
-    if (socket === null) return;
+    if (!socket) return;
 
-    const onConnect = () => setSocketIsConnected(true);
-    const onDisconnect = () => {
+    const onConnect = async () => {
+      setSocketIsConnected(true);
+    };
+    const onDisconnect = async () => {
       setSocketIsConnected(false);
     };
 
@@ -328,15 +320,13 @@ export const SocketContextProvider = ({
   //online users
   const getOnlineUsers = useCallback(
     (onlineUsers: SocketUser[]) => {
-      setOnlineUsers((prev) => [
-        ...onlineUsers.filter((user) => user.userId !== myId),
-      ]);
+      setOnlineUsers(onlineUsers);
     },
     [setOnlineUsers]
   );
 
   useEffect(() => {
-    if (!socket || !socket.connected || !session) return;
+    if (!socket || !session) return;
 
     socket?.emit("newOnlineUser", session?.user);
 
@@ -345,7 +335,7 @@ export const SocketContextProvider = ({
     return () => {
       socket?.off("getOnlineUsers", getOnlineUsers);
     };
-  }, [socket, session, socket?.connected]);
+  }, [socket, session]);
 
   return (
     <SocketContext.Provider

@@ -22,6 +22,12 @@ import { Button } from "@/shared/ui/button";
 import { useUpdateProfile } from "@/features/Auth/model/hooks/use-update-profile";
 import { Spinner } from "@/shared/ui/spinner";
 import { useRouter } from "next/navigation";
+import { SubjectForm } from "@/features/AddSubjectWithFile/ui/add-subject-form";
+import { SubjectAndFileList } from "@/features/AddSubjectWithFile/ui/subject-file-list";
+import { useGetSubjectFiles } from "@/features/AddSubjectWithFile/model/hooks/use-get-user-subjectsFiles";
+import { ScrollArea } from "@/shared/ui/scroll-area";
+import { useSession } from "next-auth/react";
+import { CopyButton } from "@/widgets/CopyButton/ui/CopyButton";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; //2mb
 
@@ -51,6 +57,13 @@ export const EditableProfileCard = ({
       image: user.image || "",
     },
   });
+
+  const { SubjectsAndFiles, isPending: subjectsPending } = useGetSubjectFiles(
+    user.id!
+  );
+
+  const session = useSession();
+
   const { profileMutate, data, isPending } = useUpdateProfile();
   const router = useRouter();
   const onSubmit = (values: z.infer<typeof profileSchema>) => {
@@ -63,58 +76,77 @@ export const EditableProfileCard = ({
     !isPending && isNew && router.push("/");
   };
   const { getValues } = form;
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Профиль</CardTitle>
-      </CardHeader>
+    <Card className="max-h-full overflow-auto custom-scrollbar p-2 relative">
+      <CopyButton data={user.id!} className={"absolute top-3 right-2"}>
+        Поделиться профилем
+      </CopyButton>
       <CardContent>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-5"
-          >
-            <div className="flex w-full justify-center">
-              <AppAvatar
-                className="h-20 w-20"
-                image={getValues().image!}
-                username={user.name!}
+        <div className="flex flex-col gap-3 max-h-full overflow-auto custom-scrollbar">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col gap-5"
+            >
+              <div className="flex w-full justify-center">
+                <AppAvatar
+                  className="h-20 w-20"
+                  image={getValues().image!}
+                  username={user.name!}
+                />
+              </div>
+              <FormField
+                name="image"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Аватар</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Ссылка на картинку..." />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
-            </div>
-            <FormField
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Аватар</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Ссылка на картинку..." />
-                  </FormControl>
-                </FormItem>
+              <FormField
+                name="name"
+                render={({ field, fieldState }) => (
+                  <FormItem>
+                    <FormLabel>Имя</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Имя пользователя..." />
+                    </FormControl>
+                    <Error error={fieldState.error} />
+                  </FormItem>
+                )}
+              />
+              {isNew ? (
+                <Button disabled={isPending} type="submit">
+                  {isPending ? <Spinner /> : "Continue"}
+                </Button>
+              ) : (
+                <Button
+                  disabled={isPending}
+                  type="submit"
+                  className="w-max mt-5"
+                >
+                  {isPending ? <Spinner /> : "Save changes"}
+                </Button>
               )}
-            />
-            <FormField
-              name="name"
-              render={({ field, fieldState }) => (
-                <FormItem>
-                  <FormLabel>Имя</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="Имя пользователя..." />
-                  </FormControl>
-                  <Error error={fieldState.error} />
-                </FormItem>
-              )}
-            />
-            {isNew ? (
-              <Button disabled={isPending} type="submit">
-                {isPending ? <Spinner /> : "Continue"}
-              </Button>
-            ) : (
-              <Button disabled={isPending} type="submit" className="w-max mt-5">
-                {isPending ? <Spinner /> : "Save changes"}
-              </Button>
+            </form>
+          </Form>
+          <div className="flex flex-col gap-3 mt-4">
+            {user.id === session.data?.user.id && user.role !== "ADMIN" && (
+              <SubjectForm userId={user.id!} />
             )}
-          </form>
-        </Form>
+            {subjectsPending ? (
+              <div className="flex w-full items-center">
+                <Spinner />
+              </div>
+            ) : (
+              <SubjectAndFileList list={SubjectsAndFiles} />
+            )}
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
