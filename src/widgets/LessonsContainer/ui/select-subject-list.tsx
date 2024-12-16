@@ -19,7 +19,7 @@ export const SelectSubjectList = ({
 }: {
   items: any[];
   currentSubjectId?: string;
-  handleChangeSubject: (subjectId: number) => void;
+  handleChangeSubject: (subjectId: string) => void;
 }) => {
   return (
     <Select value={currentSubjectId} onValueChange={handleChangeSubject}>

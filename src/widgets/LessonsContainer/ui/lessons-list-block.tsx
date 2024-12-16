@@ -31,8 +31,8 @@ export const LessonsListBlock = ({
   const [subjectId, setSubjectId] = useState<number>();
   const [date, setDate] = useState<DateRange | undefined>();
 
-  const handleSubjectChange = (subjectId: number) => {
-    setSubjectId(subjectId);
+  const handleSubjectChange = (subjectId: string) => {
+    setSubjectId(+subjectId);
     console.log(subjectId);
   };
   const handleDateChange = (newDate?: DateRange | undefined) => {
