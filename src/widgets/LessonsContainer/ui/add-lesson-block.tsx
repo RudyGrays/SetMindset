@@ -32,8 +32,8 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
   const { friends } = useFriends(user.id!);
   const { createLessonMutate } = useCreateLesson();
 
-  const handleSubjectChange = (subjectId: number) => {
-    setSubjectId(subjectId);
+  const handleSubjectChange = (subjectId: string) => {
+    setSubjectId(+subjectId);
     console.log(subjectId);
   };
 

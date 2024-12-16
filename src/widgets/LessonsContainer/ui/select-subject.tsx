@@ -18,7 +18,7 @@ export const SelectSubject = ({
 }: {
   items: SubjectWithDocuments[];
   currentSubjectId: string;
-  handleChangeSubject: (subjectId: number) => void;
+  handleChangeSubject: (subjectId: string) => void;
 }) => {
   return (
     <Select value={currentSubjectId} onValueChange={handleChangeSubject}>
@@ -32,7 +32,7 @@ export const SelectSubject = ({
             if (!subject.documents[0].isOk) return;
             return (
               <SelectItem
-                onSelect={() => handleChangeSubject(subject.id)}
+                onSelect={() => handleChangeSubject(String(subject.id))}
                 key={subject.id}
                 value={subject.id}
               >
