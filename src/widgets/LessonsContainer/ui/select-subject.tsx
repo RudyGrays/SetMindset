@@ -17,7 +17,7 @@ export const SelectSubject = ({
   currentSubjectId,
 }: {
   items: SubjectWithDocuments[];
-  currentSubjectId: number;
+  currentSubjectId: string;
   handleChangeSubject: (subjectId: number) => void;
 }) => {
   return (

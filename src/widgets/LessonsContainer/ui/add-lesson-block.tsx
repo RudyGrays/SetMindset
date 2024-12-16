@@ -168,7 +168,7 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
                     <SelectSubject
                       handleChangeSubject={handleSubjectChange}
                       items={SubjectsAndFiles.subjects}
-                      currentSubjectId={subjectId!}
+                      currentSubjectId={String(subjectId)}
                     />
                   ) : (
                     <Link href={`/profile`} className="w-full">

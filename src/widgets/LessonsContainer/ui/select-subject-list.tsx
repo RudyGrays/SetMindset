@@ -18,7 +18,7 @@ export const SelectSubjectList = ({
   currentSubjectId,
 }: {
   items: any[];
-  currentSubjectId?: number;
+  currentSubjectId?: string;
   handleChangeSubject: (subjectId: number) => void;
 }) => {
   return (
