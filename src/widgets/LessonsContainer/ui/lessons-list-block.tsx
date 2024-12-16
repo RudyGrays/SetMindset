@@ -65,7 +65,7 @@ export const LessonsListBlock = ({
           />
           {subjects && (
             <SelectSubjectList
-              currentSubjectId={subjectId}
+              currentSubjectId={String(subjectId)}
               handleChangeSubject={handleSubjectChange}
               items={subjects}
             />
