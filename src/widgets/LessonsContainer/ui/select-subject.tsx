@@ -34,7 +34,7 @@ export const SelectSubject = ({
               <SelectItem
                 onSelect={() => handleChangeSubject(String(subject.id))}
                 key={subject.id}
-                value={subject.id}
+                value={String(subject.id)}
               >
                 <p className="first-letter:uppercase">{subject.name}</p>
               </SelectItem>
