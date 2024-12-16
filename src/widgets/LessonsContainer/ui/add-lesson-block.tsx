@@ -55,7 +55,7 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
   const isLess = useCustomSize(1000);
 
   const handleCreateLesson = async () => {
-    let errors = [];
+    const errors = [];
     if (!date) {
       errors.push("Выбери дату!");
     }
