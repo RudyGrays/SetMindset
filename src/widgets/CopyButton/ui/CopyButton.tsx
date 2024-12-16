@@ -25,7 +25,7 @@ export const CopyButton = ({
   };
   const isMobile = useIsMobile();
   return (
-    <Button className={className} onClick={copyHandler}>
+    <Button variant={"ghost"} className={className} onClick={copyHandler}>
       {!isMobile ? children : ""}
       {copy ? <CopyCheck /> : <Copy />}
     </Button>

@@ -78,7 +78,7 @@ export const EditableProfileCard = ({
   const { getValues } = form;
 
   return (
-    <Card className="max-h-full overflow-auto custom-scrollbar p-2 relative">
+    <Card className="max-h-full overflow-auto custom-scrollbar p-4 relative">
       <CopyButton data={user.id!} className={"absolute top-3 right-2"}>
         Поделиться профилем
       </CopyButton>

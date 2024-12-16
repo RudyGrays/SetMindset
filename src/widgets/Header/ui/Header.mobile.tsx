@@ -1,4 +1,5 @@
 "use client";
+import { Notifications } from "@/features/Notifications/ui/notifications";
 import { useIsMobile } from "@/shared/hooks/use-mobile";
 import logo from "@/shared/images/Logo.webp";
 import { Button } from "@/shared/ui/button";
@@ -22,6 +23,7 @@ export const HeaderMobile: FC<HeaderProps> = () => {
       <div className="flex w-full  border-border rounded items-center gap-2">
         {session.status === "authenticated" && <DynamicBreadcrumb />}
       </div>
+      <Notifications />
       {isMobile && (
         <Button variant={"ghost"} onClick={() => setOpenMobile(true)}>
           <Menu />

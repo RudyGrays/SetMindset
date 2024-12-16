@@ -17,14 +17,14 @@ import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
 import { Document, Subject } from "@prisma/client";
 import { useSession } from "next-auth/react";
 
-interface DocumentWithFile {
+export interface DocumentWithFile {
   id: number;
   filename: string;
   filePath: string;
   isOk: boolean;
 }
 
-interface SubjectWithDocuments {
+export interface SubjectWithDocuments {
   id: number;
   name: string;
   documents: DocumentWithFile[];
@@ -48,7 +48,7 @@ export const SubjectAndFileList = ({ list }: { list: any }) => {
           <TableRow>
             <TableHead>Предмет</TableHead>
             <TableHead>Название файла</TableHead>
-            <TableHead>Проверено</TableHead>
+            <TableHead>Статус</TableHead>
             <TableHead>Скачать</TableHead>
           </TableRow>
         </TableHeader>

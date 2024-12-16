@@ -99,6 +99,34 @@ export const updateSubject = async (
   });
 };
 
+export const getSubjectsWithLesson = async (userId: string) => {
+  const subjects = await dbClient.subject.findMany({
+    where: {
+      OR: [
+        {
+          lessons: {
+            some: {
+              teacherId: userId,
+            },
+          },
+        },
+        {
+          lessons: {
+            some: {
+              studentId: userId,
+            },
+          },
+        },
+      ],
+    },
+    include: {
+      lessons: true,
+    },
+  });
+
+  return subjects;
+};
+
 // Удаление предмета
 export const deleteSubject = async (subjectId: number): Promise<Subject> => {
   return dbClient.subject.delete({

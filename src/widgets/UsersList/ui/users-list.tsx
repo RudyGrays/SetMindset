@@ -13,16 +13,23 @@ import { ScrollArea } from "@/shared/ui/scroll-area";
 
 interface UserListProps {
   users?: UserWithIsFriend[];
+  onChange?: (...args: any) => void;
 }
 
-const UsersList = ({ users }: UserListProps) => {
+const UsersList = ({ users, onChange }: UserListProps) => {
   return (
     <ScrollArea className="flex flex-col w-full border-b  rounded p-3  gap-5 max-w-[800px] max-h-full ">
       {!users?.length ? (
         <div className="text-center">Пользователи не найдены...</div>
       ) : (
         users.map((user) => {
-          return <UsersListItem key={user.id} user={user} />;
+          return (
+            <UsersListItem
+              onChangeHandler={onChange}
+              key={user.id}
+              user={user}
+            />
+          );
         })
       )}
     </ScrollArea>

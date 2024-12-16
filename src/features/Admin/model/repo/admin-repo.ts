@@ -13,7 +13,7 @@ export const acceptDocument = async (documentId: number) => {
   });
   if (!document) return;
 
-  const user = dbClient.user.update({
+  const user = await dbClient.user.update({
     where: {
       id: document.userId,
     },

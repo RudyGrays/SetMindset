@@ -3,7 +3,9 @@ import { AdminMiddleware } from "@/features/Admin/model/middleware/AdminMiddlewa
 const page = () => {
   return (
     <AdminMiddleware>
-      <div> admin panelsdsd</div>
+      <div className="flex w-full h-full items-center justify-center">
+        В разработке...
+      </div>
     </AdminMiddleware>
   );
 };

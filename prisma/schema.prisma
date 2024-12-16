@@ -83,6 +83,22 @@ model Subject {
   name      String     @unique
   users     User[]     @relation("UserSubjects")
   documents Document[]
+
+  lessons Lesson[] @relation("SubjectLessons")
+}
+
+model Lesson {
+  id        String   @id @default(cuid())
+  teacherId String
+  studentId String
+  date      DateTime
+  price     Float
+  subjectId Int
+
+  subject Subject @relation("SubjectLessons", fields: [subjectId], references: [id])
+
+  teacher User @relation("TeacherLessons", fields: [teacherId], references: [id], onDelete: Cascade)
+  student User @relation("StudentLessons", fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model Document {
@@ -138,17 +154,6 @@ model Rating {
 
   user   User @relation("UserRatings", fields: [userId], references: [id], onDelete: Cascade)
   author User @relation("AuthorRatings", fields: [authorId], references: [id], onDelete: Cascade)
-}
-
-model Lesson {
-  id        String   @id @default(cuid())
-  teacherId String
-  studentId String
-  date      DateTime
-  price     Float
-
-  teacher User @relation("TeacherLessons", fields: [teacherId], references: [id], onDelete: Cascade)
-  student User @relation("StudentLessons", fields: [studentId], references: [id], onDelete: Cascade)
 }
 
 model Notification {

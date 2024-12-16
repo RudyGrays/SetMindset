@@ -13,8 +13,8 @@ import { useAddSubjectAndUploadFile } from "../model/hooks/use-upload-file";
 const subjectSchema = z.object({
   subjectName: z.string().min(1, "Название предмета обязательно"),
   fileContent: z
-    .instanceof(FileList)
-    .refine((file) => file.length > 0, "Файл не выбран"),
+    .custom((file) => file instanceof FileList, "Не является FileList")
+    .refine((file) => (file as FileList).length > 0, "Файл не выбран"),
 });
 
 export type SubjectFormValues = z.infer<typeof subjectSchema>;
@@ -30,7 +30,7 @@ export const SubjectForm: React.FC<{ userId: string }> = ({ userId }) => {
 
   const { addSubjectMutate } = useAddSubjectAndUploadFile();
   const onSubmit = async (data: SubjectFormValues) => {
-    const file = data.fileContent[0];
+    const file = (data.fileContent as FileList)[0];
 
     if (!userId) return console.log(userId);
     if (!file) return;

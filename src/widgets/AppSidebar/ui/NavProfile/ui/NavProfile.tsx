@@ -27,6 +27,7 @@ import {
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
+import { Notifications } from "@/features/Notifications/ui/notifications";
 
 export function NavUser({
   user,
@@ -87,11 +88,6 @@ export function NavUser({
                 <Link href={"/profile"} onClick={closeSidebarHandler}>
                   Account
                 </Link>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

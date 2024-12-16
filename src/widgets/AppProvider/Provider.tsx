@@ -3,6 +3,7 @@ import { SocketProvider } from "@/features/Socket/ui/socket-provider";
 import { ThemeProvider } from "@/features/Theme/ui/ThemeProvider";
 import { queryClient } from "@/shared/api/query-client";
 import { SidebarProvider } from "@/shared/ui/sidebar";
+
 import { QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { FC, ReactNode } from "react";

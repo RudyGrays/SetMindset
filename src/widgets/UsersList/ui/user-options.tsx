@@ -1,8 +1,10 @@
 "use client";
 import { UserEntity } from "@/entities/User/model/types/User";
 import { UserWithIsFriend } from "@/features/Friends/model/actions/getFriends";
+import { removeFriend } from "@/features/Friends/model/actions/removeFriend";
 import { useAddFriend } from "@/features/Friends/model/hooks/use-add-friend";
 import { useSocket } from "@/features/Socket/ui/socket-context";
+import { useToast } from "@/shared/hooks/use-toast";
 import { Button } from "@/shared/ui/button";
 import {
   DropdownMenu,
@@ -13,6 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+import { useQueryClient } from "@tanstack/react-query";
 import { Ellipsis } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -23,7 +26,8 @@ export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
   const myId = session.data?.user.id!;
   const { addUserMutate } = useAddFriend(myId, user.id!);
   const { socket } = useSocket();
-
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -39,7 +43,28 @@ export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
           <Link href={`/friends/${user.id}`}>Friends</Link>
         </DropdownMenuItem>
         {!user.isFriend && (
-          <DropdownMenuItem onClick={() => {}}>Add friend</DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              addUserMutate();
+            }}
+          >
+            Add friend
+          </DropdownMenuItem>
+        )}
+        {user.isFriend && (
+          <DropdownMenuItem
+            onClick={async () => {
+              await removeFriend(myId!, user.id!);
+              queryClient.refetchQueries({
+                queryKey: ["friends"],
+              });
+              toast({
+                title: "Успешно удалено!",
+              });
+            }}
+          >
+            Delete friend
+          </DropdownMenuItem>
         )}
       </DropdownMenuContent>
     </DropdownMenu>

@@ -24,6 +24,32 @@ export const FriendsRepository = {
     return friendsList;
   },
 
+  getFriendsWithTeach: async (userId: string) => {
+    const friends = await dbClient.friend.findMany({
+      where: {
+        status: "ACCEPTED",
+        OR: [{ userId: userId }, { friendId: userId }],
+        user: {
+          canTeach: true,
+        },
+      },
+      include: {
+        user: true,
+        friend: true,
+      },
+    });
+
+    const friendsList = friends.map((friendship) => {
+      if (friendship.userId === userId) {
+        return friendship.friend;
+      } else {
+        return friendship.user;
+      }
+    });
+
+    return friendsList;
+  },
+
   addFriend: async (requesterId: string, responderId: string) => {
     return dbClient.friend.create({
       data: {

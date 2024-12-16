@@ -18,6 +18,8 @@ import { AuthMiddleware } from "@/features/Auth/model/middleware/auth.middleware
 import { SocketProvider } from "@/features/Socket/ui/socket-provider";
 import { Toaster } from "@/shared/ui/toaster";
 import { CallNotification } from "@/widgets/CallNotification/ui/CallNotification";
+import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-session";
+import { redirect } from "next/navigation";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -56,7 +58,7 @@ export default function RootLayout({
               </div>
               <Container>
                 <main className=" px-2 py-2 h-[calc(100vh-60px-8px)]  flex w-full">
-                  <div className="h-full w-full  rounded overflow-hidden  border">
+                  <div className="h-full w-full  rounded overflow-hidden">
                     {children}
                   </div>
                 </main>

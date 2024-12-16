@@ -102,7 +102,7 @@ export const Chat: FC<ChatProps> = memo(
     }, [currentUserMessages, user2Messages]);
 
     return (
-      <div className="max-h-full h-full max-w-full flex flex-col rounded gap-3">
+      <div className="max-h-full h-full max-w-[800px] w-full flex flex-col rounded gap-3">
         <div className="max-h-[90%] border h-full w-full max-w-full  rounded p-2 overflow-auto custom-scrollbar">
           {messages.length > 0 ? (
             messages.map((message, id, arr) => {

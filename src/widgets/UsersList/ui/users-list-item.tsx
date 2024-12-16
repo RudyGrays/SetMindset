@@ -1,7 +1,7 @@
 "use client";
 import { UserEntity } from "@/entities/User/model/types/User";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
-import { MessageCircleMore, Video } from "lucide-react";
+import { MessageCircleMore, Plus, Video } from "lucide-react";
 import Link from "next/link";
 import { UserOptions } from "./user-options";
 import { UserWithIsFriend } from "@/features/Friends/model/actions/getFriends";
@@ -17,7 +17,13 @@ import { queryClient } from "@/shared/api/query-client";
 import { useUsers } from "@/features/Users/model/hooks/use-users";
 import { CallButton } from "@/widgets/CallButton/ui/call-button";
 
-export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
+export const UsersListItem = ({
+  user,
+  onChangeHandler,
+}: {
+  user: UserWithIsFriend;
+  onChangeHandler?: (...args: any) => void;
+}) => {
   const session = useSession();
   const { chats } = useChat(user.id!);
   const { onlineUsers, handleCall } = useSocket();
@@ -39,7 +45,7 @@ export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
   const { addUserMutate, data } = useAddFriend(myId!, user.id!);
 
   return (
-    <div key={user.id} className="">
+    <div key={user.id}>
       <div className="p-2 flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <Link href={`/profile/${user.id}`}>
@@ -66,7 +72,7 @@ export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
                   <MessageCircleMore size={22} />
                   Message
                 </Button>
-                {/* <CallButton userId={user.id} /> */}
+                <CallButton userId={user.id} />
               </div>
             )}
             {!user.isFriend && !user.isRequest && (
@@ -83,7 +89,13 @@ export const UsersListItem = ({ user }: { user: UserWithIsFriend }) => {
             {!user.isFriend && user.isRequest && <div>Request send</div>}
           </div>
         </div>
-        <UserOptions user={user} />
+        {onChangeHandler ? (
+          <Button variant={"outline"} onClick={() => onChangeHandler(user)}>
+            <Plus />
+          </Button>
+        ) : (
+          <UserOptions user={user} />
+        )}
       </div>
     </div>
   );

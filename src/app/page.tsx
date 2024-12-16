@@ -1,15 +1,12 @@
-"use client";
-
+import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-session";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 import { useEffect } from "react";
 
-export default function Home() {
-  const session = useSession();
-  const router = useRouter();
-  useEffect(() => {
-    if (!session) return router.replace("/auth/sign-in");
-  }, []);
-  return <div className=""></div>;
+export default async function Home() {
+  const session = await getAppSessionServer();
+
+  if (!session) return redirect("/auth/sign-in");
+  return <div className="">Home</div>;
 }
