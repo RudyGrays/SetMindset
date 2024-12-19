@@ -5,7 +5,7 @@ import { ProfileCard } from "@/features/Profile/ui/profile-card";
 const Page = async () => {
   const session = await getAppSessionServer();
   return (
-    <div className="space-y-6 py-14 container  max-w-[600px]">
+    <div className="space-y-6  max-h-[calc(100vh-60px-8px)] flex flex-col container  max-w-[600px]">
       <div>
         <h3 className="text-lg font-medium">Последний шаг</h3>
         <p className="text-sm text-muted-foreground">

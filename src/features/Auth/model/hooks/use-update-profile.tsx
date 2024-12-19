@@ -9,6 +9,7 @@ import { getSession, signIn, useSession } from "next-auth/react";
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
   const session = useSession();
+  const isAdmin = session.data?.user.role === "ADMIN";
   const { toast } = useToast();
   const {
     mutate: profileMutate,
@@ -20,7 +21,7 @@ export const useUpdateProfile = () => {
       name?: string;
       image?: string;
     }) => {
-      return await updateProfile(profile);
+      return await updateProfile({ ...profile, isAdmin });
     },
     onSuccess: async (data) => {
       queryClient.invalidateQueries({

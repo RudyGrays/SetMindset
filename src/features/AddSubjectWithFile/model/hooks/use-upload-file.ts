@@ -11,7 +11,6 @@ export const useAddSubjectAndUploadFile = () => {
   const { toast } = useToast();
   const { isPending, data, mutate } = useMutation({
     mutationFn: ({ data, userId }: { data: any; userId: string }) => {
-      console.log(data, userId);
       return addSubjectAndFileAction({
         file: data.fileContent,
         subject: {
@@ -19,7 +18,9 @@ export const useAddSubjectAndUploadFile = () => {
         },
       });
     },
-
+    onError: (data) => {
+      console.log(data);
+    },
     onSuccess: () => {
       queryClient.refetchQueries({
         queryKey: ["userSubjectsWithFile"],

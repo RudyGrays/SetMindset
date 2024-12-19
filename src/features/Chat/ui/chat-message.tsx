@@ -47,8 +47,15 @@ export const ChatMessage = ({
             />
           </Link>
 
-          <div className="flex gap-4 items-center">
-            <span className="text-[0.6rem]">{messageDate}</span>
+          <div
+            className={
+              "flex gap-4 items-center" +
+              `${!isCurrentUser && " flex-row-reverse"}`
+            }
+          >
+            <span className="text-[0.6rem] flex items-center">
+              {messageDate}
+            </span>
             <span>{user.name}</span>
           </div>
         </div>

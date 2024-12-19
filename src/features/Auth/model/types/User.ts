@@ -15,6 +15,8 @@ export interface UserEntity {
   emailVerified?: Date | null;
   name?: string | null;
   image?: string | null;
+  updatedAt?: Date;
+  canTeach?: boolean;
 }
 
 export type SessionEntity = {

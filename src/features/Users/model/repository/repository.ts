@@ -8,6 +8,7 @@ export const UsersRepository = {
   ) => {
     const users = await dbClient.user.findMany({
       where: {
+        isOk: true,
         NOT: {
           id: userId,
         },
@@ -47,23 +48,48 @@ export const UsersRepository = {
       );
 
     const requestIds = friendshipRequests
-      .filter(
-        (friendship) =>
-          friendship.status === "PENDING" && friendship.userId === currentUserId
-      )
-      .map((friendship) => friendship.friendId);
+      .filter((friendship) => friendship.status === "PENDING")
+      .map((friendship) => friendship);
 
-    const usersWithFriendStatus = users.map((user) => {
-      const isFriend = friendIds.includes(user.id);
-      const isRequest = requestIds.includes(user.id);
+    const usersWithRatings = await Promise.all(
+      users.map(async (user) => {
+        const ratingArr = await dbClient.rating.findMany({
+          where: {
+            userId: user.id,
+          },
+        });
 
-      return {
-        ...user,
-        isFriend,
-        isRequest,
-      };
-    });
+        const rating =
+          ratingArr.length > 0
+            ? Math.round(
+                ratingArr.reduce((acc, rate) => acc + rate.rating, 0) /
+                  ratingArr.length
+              )
+            : 0;
 
-    return usersWithFriendStatus;
+        const isFriend = friendIds.includes(user.id);
+        const isRequest = requestIds.some(
+          (request) =>
+            request.friendId === user.id || request.userId === user.id
+        );
+        const request = requestIds.find(
+          (request) =>
+            request.friendId === user.id || request.userId === user.id
+        );
+        const requesterId = request?.userId;
+
+        return {
+          ...user,
+          rating,
+          isFriend,
+          isRequest,
+          requesterId,
+        };
+      })
+    );
+
+    const sortedUsers = usersWithRatings.sort((a, b) => b.rating - a.rating);
+
+    return sortedUsers;
   },
 };

@@ -13,21 +13,17 @@ type CreateNotificationInput = {
   senderId: string;
 };
 
-export const useCreateNotification = (
-  notificationData: CreateNotificationInput
-) => {
+export const useCreateNotification = () => {
   const { toast } = useToast();
 
   const session = useSession();
   const myId = session.data?.user.id;
-  const { socket } = useSocket();
 
-  const mutation = useMutation<Notification>({
-    mutationFn: () => {
+  const mutation = useMutation({
+    mutationFn: (notificationData: CreateNotificationInput) => {
       return createNotification(notificationData);
     },
     onSuccess: (data) => {
-      socket?.emit("sendNotification", data);
       toast({
         title: "Успешно отправлено!",
       });

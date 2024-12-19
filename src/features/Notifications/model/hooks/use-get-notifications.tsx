@@ -5,7 +5,9 @@ import { Notification } from "@prisma/client";
 export const useNotifications = (userId: string) => {
   const { data, isLoading, isError, error } = useQuery<Notification[], Error>({
     queryKey: ["notifications", userId],
-    queryFn: () => getNotificationsForUser(userId),
+    queryFn: () => {
+      return getNotificationsForUser(userId);
+    },
     enabled: !!userId,
   });
 

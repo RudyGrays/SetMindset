@@ -3,8 +3,10 @@ import { useGetSubjectFiles } from "@/features/AddSubjectWithFile/model/hooks/us
 import { SubjectForm } from "@/features/AddSubjectWithFile/ui/add-subject-form";
 import { SubjectAndFileList } from "@/features/AddSubjectWithFile/ui/subject-file-list";
 import { UserEntity } from "@/features/Auth/model/types/User";
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/ui/avatar";
-import { Button } from "@/shared/ui/button";
+
+import { SelectedStars } from "@/features/Rating/ui/selected-stars";
+import { Stars } from "@/features/Rating/ui/stars";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card";
 import { Spinner } from "@/shared/ui/spinner";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
@@ -16,6 +18,8 @@ export const ProfileCard = ({ user }: { user: UserEntity }) => {
     user.id!
   );
   const session = useSession();
+  const myId = session.data?.user.id;
+
   return (
     <Card className="max-h-full overflow-auto custom-scrollbar p-4 relative">
       <CardHeader>
@@ -27,8 +31,18 @@ export const ProfileCard = ({ user }: { user: UserEntity }) => {
           />
         </CardTitle>
       </CardHeader>
+
       <CardContent className="flex flex-col gap-4">
-        <CopyButton data={user.id!} className={"absolute top-3 right-2"}>
+        {user.canTeach && (
+          <div className="flex flex-col w-full gap-1">
+            Рейтинг преподавателя: <Stars userId={user.id!} />
+            Вы поставили: <SelectedStars myId={myId!} userId={user.id!} />
+          </div>
+        )}
+        <CopyButton
+          data={`${process.env.NEXT_PUBLIC_URL}/profile/${user.id}`}
+          className={"absolute top-3 right-2"}
+        >
           Поделиться профилем
         </CopyButton>
         <div>Username: {user.name}</div>

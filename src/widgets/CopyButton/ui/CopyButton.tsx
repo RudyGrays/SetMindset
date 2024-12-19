@@ -16,9 +16,7 @@ export const CopyButton = ({
   const [copy, setCopy] = useState(false);
   const copyHandler = async () => {
     setCopy(true);
-    await navigator.clipboard.writeText(
-      `${process.env.NEXT_PUBLIC_URL}/profile/${data}`
-    );
+    await navigator.clipboard.writeText(data);
     setTimeout(() => {
       setCopy(false);
     }, 2000);

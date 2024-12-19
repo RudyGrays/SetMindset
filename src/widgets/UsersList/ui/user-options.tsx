@@ -14,18 +14,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/shared/ui/popover";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { Ellipsis } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
   const session = useSession();
   const myId = session.data?.user.id!;
   const { addUserMutate } = useAddFriend(myId, user.id!);
-  const { socket } = useSocket();
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
   return (

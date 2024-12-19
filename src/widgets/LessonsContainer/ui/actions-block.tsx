@@ -10,7 +10,7 @@ export const ActionsBlock = ({
   children: ReactNode;
 }) => {
   return (
-    <div className={`${isMobile ? "w-full" : " h-full"}   p-2 flex-grow`}>
+    <div className={`${isMobile ? "w-full" : "  "}  p-2 flex-grow  max-h-full`}>
       {children}
     </div>
   );

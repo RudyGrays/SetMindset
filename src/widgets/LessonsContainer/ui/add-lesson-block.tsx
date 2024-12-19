@@ -23,7 +23,6 @@ import { useCustomSize } from "@/shared/hooks/use-custom-size";
 export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
   const isMobile = useIsMobile();
   const [date, setDate] = useState<Date | undefined>();
-  const [teacher, setTeacher] = useState<UserEntity>();
   const [student, setStudent] = useState<UserEntity>();
   const [subjectId, setSubjectId] = useState<number>();
   const [price, setPrice] = useState<number | string>("");
@@ -34,13 +33,11 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
 
   const handleSubjectChange = (subjectId: string) => {
     setSubjectId(+subjectId);
-    console.log(subjectId);
   };
 
   const handleStudentChange = useCallback(
     (student: UserEntity) => {
       setStudent(student);
-      console.log(student);
     },
     [setStudent]
   );
@@ -104,12 +101,12 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
   return (
     <LessonBlock
       className={`${
-        isLess ? "max-h-[50%] w-full" : "flex-grow"
+        isLess ? " max-h-[50%] w-full " : "flex-grow"
       } overflow-auto custom-scrollbar`}
       isMobile={isMobile}
     >
       <div className="flex flex-col w-full ">
-        <div className="flex w-full  ">
+        <div className={"flex w-full   " + `${isLess && " flex-col-reverse"}`}>
           <ActionsBlock isMobile={isMobile}>
             <TimeBlock
               date={date}
@@ -134,23 +131,21 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
             <AddLessonButton onClick={handleCreateLesson} />
           </div>
           <ActionsBlock isMobile={isMobile}>
-            <div className="w-full h-full flex justify-center">
+            <div className="w-full h-full  flex justify-center">
               <div
                 className={
                   "max-w-[300px] max-h-full border h-full rounded-xl flex flex-col p-2 items-center gap-1 overflow-auto custom-scrollbar"
                 }
               >
                 <div className="flex-grow w-full">
-                  {friends ? (
+                  {friends && friends?.length > 0 ? (
                     <LessonUsersTable
                       onClick={handleStudentChange}
                       users={friends}
                       currentUser={student}
                     />
                   ) : (
-                    <div className="w-full text-center">
-                      <Spinner />
-                    </div>
+                    <div className="w-full text-center">Список друзей пуст</div>
                   )}
                 </div>
                 {SubjectsAndFiles?.canTeach && (

@@ -12,11 +12,7 @@ export const LessonBlock = ({
   className?: string;
 }) => {
   return (
-    <div
-      className={
-        "flex rounded p-3 border  " + `${isMobile ? " " : " "} ${className}`
-      }
-    >
+    <div className={"flex  p-3  " + `${isMobile ? " " : " "} ${className}`}>
       {children}
     </div>
   );

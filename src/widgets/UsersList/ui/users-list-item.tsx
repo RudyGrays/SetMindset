@@ -16,6 +16,7 @@ import { useCreateNotification } from "@/features/Notifications/model/hooks/use-
 import { queryClient } from "@/shared/api/query-client";
 import { useUsers } from "@/features/Users/model/hooks/use-users";
 import { CallButton } from "@/widgets/CallButton/ui/call-button";
+import { useAcceptRequestFriend } from "@/features/Friends/model/hooks/use-accept-request-friend";
 
 export const UsersListItem = ({
   user,
@@ -26,12 +27,8 @@ export const UsersListItem = ({
 }) => {
   const session = useSession();
   const { chats } = useChat(user.id!);
-  const { onlineUsers, handleCall } = useSocket();
-  const myId = session.data?.user.id;
 
-  const receiverSocketUser = onlineUsers?.find(
-    (ruser) => ruser.userId === user.id
-  );
+  const myId = session.data?.user.id;
 
   const chatIdWithUser = chats?.find(
     (chat) => chat.user1Id === myId || chat.user2Id === myId
@@ -39,11 +36,11 @@ export const UsersListItem = ({
   const chatWithUser = chats?.find(
     (chat) => chat.user1Id === myId || chat.user2Id === myId
   );
-  const { mutate } = useCreateChat(myId!, user.id!);
+  const { mutate: mutateChat } = useCreateChat(myId!, user.id!);
   const router = useRouter();
 
-  const { addUserMutate, data } = useAddFriend(myId!, user.id!);
-
+  const { addUserMutate } = useAddFriend(myId!, user.id!);
+  const { mutate } = useAcceptRequestFriend();
   return (
     <div key={user.id}>
       <div className="p-2 flex justify-between items-center">
@@ -64,7 +61,7 @@ export const UsersListItem = ({
                   className="flex gap-2 items-center hover:bg-background p-2 rounded"
                   onClick={() => {
                     if (!chatIdWithUser) {
-                      return mutate();
+                      return mutateChat();
                     }
                     return router.push(`chats/${chatWithUser?.id}`);
                   }}
@@ -86,7 +83,22 @@ export const UsersListItem = ({
                 Add friend
               </Button>
             )}
-            {!user.isFriend && user.isRequest && <div>Request send</div>}
+            {!user.isFriend && user.isRequest && user.requesterId === myId && (
+              <div className="text-sm">Запрос отправлен</div>
+            )}
+            {!user.isFriend && user.isRequest && user.requesterId !== myId ? (
+              <Button
+                variant={"ghost"}
+                onClick={() => {
+                  mutate({
+                    requesterId: user.id!,
+                    responderId: myId!,
+                  });
+                }}
+              >
+                Принять запрос дружбы
+              </Button>
+            ) : null}
           </div>
         </div>
         {onChangeHandler ? (

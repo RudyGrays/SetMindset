@@ -12,8 +12,8 @@ export const downloadFileAction = async (filepath: string) => {
     new Uint8Array(fileBuffer);
 
     return new Uint8Array(fileBuffer);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return undefined;
+    throw new Error(error);
   }
 };

@@ -9,8 +9,8 @@ import GitHubProvider from "next-auth/providers/github";
 
 export const authConfig: AuthOptions = {
   session: {
-    maxAge: 24 * 60 * 60, // Установите максимальный срок действия сессии на 24 часа
-    updateAge: 60 * 60, // Каждый час будет обновляться сессия, если она активна
+    maxAge: 24 * 60 * 60,
+    updateAge: 60 * 60,
   },
   adapter: {
     ...PrismaAdapter(dbClient),
@@ -20,7 +20,9 @@ export const authConfig: AuthOptions = {
         data: {
           ...user,
           id,
+          updatedAt: new Date(),
           name: `guest${id.substring(0, 8)}`,
+          canTeach: user.canTeach || false,
           role:
             user.email.toLocaleLowerCase() ===
             process.env.ADMIN_EMAIL?.toLocaleLowerCase()
@@ -28,7 +30,7 @@ export const authConfig: AuthOptions = {
               : "USER",
         },
       });
-      console.log(user.email, process.env.ADMIN_EMAIL);
+
       return {
         ...newUser,
       };
@@ -43,6 +45,7 @@ export const authConfig: AuthOptions = {
           ...session.user,
           role: user.role,
           id: user.id,
+          canTeach: user.canTeach,
           name: session.user.name
             ? session.user.name
             : `guest@${user.id.split("").slice(0, 7).join("")}`,

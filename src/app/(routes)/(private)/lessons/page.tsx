@@ -6,7 +6,7 @@ const Page = async () => {
   if (!session) return;
 
   return (
-    <div className="h-full max-h-full max-w-full w-full rounded">
+    <div className="h-[calc(100vh-60px-8px)] max-w-full w-full rounded">
       <LessonsContainer user={session?.user} />
     </div>
   );

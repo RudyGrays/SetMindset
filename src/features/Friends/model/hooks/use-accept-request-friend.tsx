@@ -1,3 +1,4 @@
+"use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { acceptFriendship } from "../actions/acceptFriendship";
 import { queryClient } from "@/shared/api/query-client";
@@ -14,16 +15,23 @@ export const useAcceptRequestFriend = () => {
     }: {
       requesterId: string;
       responderId: string;
-      notificationId: number;
+      notificationId?: number;
     }) => {
+      console.log("mutate");
       return await acceptFriendship(requesterId, responderId);
     },
 
     onSuccess(data, variables) {
       const { notificationId } = variables;
-      deleteNotificationMutate({ notificationId: notificationId });
+      if (notificationId) {
+        deleteNotificationMutate({ notificationId: notificationId! });
+      }
+
       queryClient.refetchQueries({
         queryKey: ["friends"],
+      });
+      queryClient.refetchQueries({
+        queryKey: ["users"],
       });
     },
   });

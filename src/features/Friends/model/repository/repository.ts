@@ -5,6 +5,9 @@ export const FriendsRepository = {
     const friends = await dbClient.friend.findMany({
       where: {
         status: "ACCEPTED",
+        user: {
+          isOk: true,
+        },
         OR: [{ userId: userId }, { friendId: userId }],
       },
       include: {
@@ -31,6 +34,7 @@ export const FriendsRepository = {
         OR: [{ userId: userId }, { friendId: userId }],
         user: {
           canTeach: true,
+          isOk: true,
         },
       },
       include: {

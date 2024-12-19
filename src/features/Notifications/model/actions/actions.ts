@@ -13,7 +13,7 @@ export async function createNotification({
   senderId: string;
   message: string;
   type?: string;
-}): Promise<Notification> {
+}) {
   try {
     const notification = await dbClient.notification.create({
       data: {

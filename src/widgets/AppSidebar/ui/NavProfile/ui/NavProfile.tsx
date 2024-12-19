@@ -28,6 +28,7 @@ import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
 import { Notifications } from "@/features/Notifications/ui/notifications";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -39,7 +40,10 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const { setOpen, setOpenMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar();
+
+  const router = useRouter();
+
   const closeSidebarHandler = () => {
     setOpenMobile(false);
   };
@@ -82,12 +86,9 @@ export function NavUser({
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/profile")}>
                 <BadgeCheck />
-
-                <Link href={"/profile"} onClick={closeSidebarHandler}>
-                  Account
-                </Link>
+                Account
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

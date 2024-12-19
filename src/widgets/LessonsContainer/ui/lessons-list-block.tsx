@@ -18,6 +18,7 @@ import { Spinner } from "@/shared/ui/spinner";
 import { X } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { useCustomSize } from "@/shared/hooks/use-custom-size";
+import { useDebounce } from "use-debounce";
 
 export const LessonsListBlock = ({
   isMobile,
@@ -38,25 +39,22 @@ export const LessonsListBlock = ({
   const handleDateChange = (newDate?: DateRange | undefined) => {
     setDate(newDate);
   };
-
+  const [debouncedValue] = useDebounce(name, 500);
   const { subjects } = useGetSubjectsWithLesson(user.id!);
-  const { lessons, error, isLoading } = useGetLessonsWithFilters({
+  const { lessons, isLoading } = useGetLessonsWithFilters({
     dateRange: date,
     direction,
     subjectId,
-    teacherName: name,
+    teacherName: debouncedValue,
   });
 
   const isLess = useCustomSize(1000);
   return (
     <div
-      className={
-        "p-3 border min-w-[30%] flex-grow  rounded flex " +
-        ` ${isLess ? "max-h-[50%]" : ""}`
-      }
+      className={"p-3  min-w-[30%] flex-grow   flex " + ` ${isLess ? "" : ""}`}
     >
-      <div className="w-full max-h-full flex flex-col ">
-        <div className="flex p-2 gap-2 flex-grow-[1]  flex-wrap justify-between overflow-auto custom-scrollbar">
+      <div className="w-full max-h-full border rounded-xl flex flex-col ">
+        <div className="flex p-2 gap-2   flex-wrap justify-between  overflow-auto custom-scrollbar">
           <Input
             className="w-[165px]"
             value={name}
@@ -71,7 +69,7 @@ export const LessonsListBlock = ({
             />
           )}
           <DatePickerWithRange handleChange={handleDateChange} date={date} />
-          <div className="flex items-center gap-1">
+          <div className="flex gap-1  items-center">
             <Switch
               defaultChecked={false}
               id="direction-mode"
@@ -96,13 +94,7 @@ export const LessonsListBlock = ({
           </Button>
         </div>
         <div className="flex-grow-[4] overflow-auto custom-scrollbar">
-          {isLoading ? (
-            <Spinner />
-          ) : lessons ? (
-            <LessonsTable lessons={lessons} />
-          ) : (
-            <div>Список пуст</div>
-          )}
+          <LessonsTable isLoading={isLoading} lessons={lessons} />
         </div>
       </div>
     </div>

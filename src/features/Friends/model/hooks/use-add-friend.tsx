@@ -9,17 +9,17 @@ import { useCreateNotification } from "@/features/Notifications/model/hooks/use-
 export const useAddFriend = (requesterId: string, responderId: string) => {
   const queryClient = useQueryClient();
   const { socket } = useSocket();
-  const { mutate } = useCreateNotification({
-    message: "let`s be friends",
-    userId: responderId,
-    type: "request friend",
-    senderId: requesterId,
-  });
+  const { mutate } = useCreateNotification();
 
   const mutation = useMutation({
     mutationFn: () => addFriend(requesterId, responderId),
     onSuccess: (data) => {
-      mutate();
+      mutate({
+        message: "let`s be friends",
+        userId: responderId,
+        type: "request friend",
+        senderId: requesterId,
+      });
 
       queryClient.refetchQueries({
         queryKey: ["users"],

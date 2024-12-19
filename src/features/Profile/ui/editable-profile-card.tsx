@@ -15,9 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/shared/ui/input";
 import { Error } from "@/shared/ui/error";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
-import { Avatar } from "@/shared/ui/avatar";
-import { AvatarImage } from "@radix-ui/react-avatar";
-import { AvatarField } from "./avatar-field";
+
 import { Button } from "@/shared/ui/button";
 import { useUpdateProfile } from "@/features/Auth/model/hooks/use-update-profile";
 import { Spinner } from "@/shared/ui/spinner";
@@ -28,6 +26,10 @@ import { useGetSubjectFiles } from "@/features/AddSubjectWithFile/model/hooks/us
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import { useSession } from "next-auth/react";
 import { CopyButton } from "@/widgets/CopyButton/ui/CopyButton";
+import { FilledStar } from "@/features/Rating/ui/filled-star";
+import { Star } from "@/features/Rating/ui/star";
+import { Stars } from "@/features/Rating/ui/stars";
+import { SelectedStars } from "@/features/Rating/ui/selected-stars";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; //2mb
 
@@ -64,6 +66,9 @@ export const EditableProfileCard = ({
 
   const session = useSession();
 
+  const myId = session.data?.user.id;
+  const myRole = session.data?.user.role;
+
   const { profileMutate, data, isPending } = useUpdateProfile();
   const router = useRouter();
   const onSubmit = (values: z.infer<typeof profileSchema>) => {
@@ -79,10 +84,24 @@ export const EditableProfileCard = ({
 
   return (
     <Card className="max-h-full overflow-auto custom-scrollbar p-4 relative">
-      <CopyButton data={user.id!} className={"absolute top-3 right-2"}>
+      <CopyButton
+        data={`${process.env.NEXT_PUBLIC_URL}/profile/${user.id}`}
+        className={"absolute top-3 right-2"}
+      >
         Поделиться профилем
       </CopyButton>
       <CardContent>
+        {myRole === "ADMIN" && user.id !== myId && user.canTeach ? (
+          <div className="flex flex-col w-full gap-1">
+            Рейтинг преподавателя: <Stars userId={user.id!} />
+            Вы поставили: <SelectedStars myId={myId!} userId={user.id!} />
+          </div>
+        ) : user.canTeach ? (
+          <div className="flex flex-col w-full">
+            Рейтинг преподавателя: <Stars userId={user.id!} />
+          </div>
+        ) : null}
+
         <div className="flex flex-col gap-3 max-h-full overflow-auto custom-scrollbar">
           <Form {...form}>
             <form
@@ -135,7 +154,7 @@ export const EditableProfileCard = ({
             </form>
           </Form>
           <div className="flex flex-col gap-3 mt-4">
-            {user.id === session.data?.user.id && user.role !== "ADMIN" && (
+            {myRole === "ADMIN" && user.id !== myId ? null : (
               <SubjectForm userId={user.id!} />
             )}
             {subjectsPending ? (

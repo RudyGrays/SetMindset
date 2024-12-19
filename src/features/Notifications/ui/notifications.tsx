@@ -14,7 +14,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/shared/ui/sheet";
-import { Bell } from "lucide-react";
+import { Bell, BellDot, X } from "lucide-react";
 import { useCreateNotification } from "../model/hooks/use-create-notification";
 import { useNotifications } from "../model/hooks/use-get-notifications";
 import { useSession } from "next-auth/react";
@@ -24,6 +24,9 @@ import { Notification } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAddFriend } from "@/features/Friends/model/hooks/use-add-friend";
 import { useAcceptRequestFriend } from "@/features/Friends/model/hooks/use-accept-request-friend";
+import Link from "next/link";
+import { useDeleteNotification } from "../model/hooks/use-delete-notification";
+import { removeFriend } from "@/features/Friends/model/actions/removeFriend";
 
 export const Notifications = () => {
   const { socket } = useSocket();
@@ -45,16 +48,20 @@ export const Notifications = () => {
     return () => {
       socket?.off("addNotification", getNotification);
     };
-  }, [socket, myId, getNotification]);
+  }, [socket, myId]);
 
   const { notifications } = useNotifications(myId!);
 
   const { mutate } = useAcceptRequestFriend();
-
+  const { deleteNotificationMutate } = useDeleteNotification();
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Bell className="w-5 h-5 cursor-pointer" />
+        {notifications.length > 0 ? (
+          <BellDot className="w-5 h-5 cursor-pointer" />
+        ) : (
+          <Bell className="w-5 h-5 cursor-pointer" />
+        )}
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -73,24 +80,59 @@ export const Notifications = () => {
               return (
                 <div
                   key={notification.id}
-                  className="flex items-center max-w-full"
+                  className="flex items-center w-full border rounded-xl p-1 max-w-full"
                 >
-                  {notification.message}
-                  <span className="text-sm">
-                    {formatDate(notification.createdAt)}
-                  </span>
                   {notification.type === "request friend" && (
-                    <Button
-                      onClick={() => {
-                        mutate({
-                          requesterId: notification.senderId,
-                          responderId: notification.userId,
-                          notificationId: notification.id,
-                        });
-                      }}
-                    >
-                      Accept
-                    </Button>
+                    <div className="flex w-full items-center justify-between">
+                      Запрос дружбы
+                      <span className="text-sm">
+                        {formatDate(notification.createdAt)}
+                      </span>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => {
+                          mutate({
+                            requesterId: notification.senderId,
+                            responderId: notification.userId,
+                            notificationId: notification.id,
+                          });
+                        }}
+                      >
+                        Accept
+                      </Button>
+                      <X
+                        className=" cursor-pointer"
+                        onClick={() => {
+                          removeFriend(
+                            notification.senderId,
+                            notification.userId
+                          );
+                          deleteNotificationMutate({
+                            notificationId: notification.id,
+                          });
+                        }}
+                      />
+                    </div>
+                  )}
+                  {notification.type === "lesson" && (
+                    <div className="flex items-center gap-1">
+                      {notification.message}
+                      <span className="text-sm">
+                        {formatDate(notification.createdAt)}
+                      </span>
+                      <Link href={"/lessons"}>
+                        <Button variant={"outline"}>Посмотреть</Button>
+                      </Link>
+
+                      <X
+                        className=" cursor-pointer"
+                        onClick={() => {
+                          deleteNotificationMutate({
+                            notificationId: notification.id,
+                          });
+                        }}
+                      />
+                    </div>
                   )}
                 </div>
               );

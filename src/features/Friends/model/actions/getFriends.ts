@@ -7,6 +7,7 @@ import { UserEntity } from "@/entities/User/model/types/User";
 export type UserWithIsFriend = UserEntity & {
   isFriend: boolean;
   isRequest?: boolean;
+  requesterId?: string;
 };
 
 export const getFriends = async (userId: string) => {

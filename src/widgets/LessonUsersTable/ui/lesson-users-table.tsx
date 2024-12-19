@@ -13,7 +13,6 @@ import {
 } from "@/shared/ui/table";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
 import { Check } from "lucide-react";
-import { Button } from "react-day-picker";
 
 export const LessonUsersTable = ({
   users,
@@ -25,7 +24,7 @@ export const LessonUsersTable = ({
   currentUser?: UserEntity;
 }) => {
   return (
-    <ScrollArea className="max-h-full rounded-xl">
+    <div className="max-h-full  rounded-xl overflow-auto custom-scrollbar">
       <Table>
         <TableBody>
           {users?.map((user) => {
@@ -51,6 +50,6 @@ export const LessonUsersTable = ({
           })}
         </TableBody>
       </Table>
-    </ScrollArea>
+    </div>
   );
 };

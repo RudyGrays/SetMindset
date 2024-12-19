@@ -24,3 +24,42 @@ export const acceptDocument = async (documentId: number) => {
 
   return document;
 };
+
+export const acceptUserUpdates = async (userId: string) => {
+  await dbClient.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      isOk: true,
+    },
+  });
+};
+
+export const getUsersForAdmin = async (
+  userId: string,
+  searchValue?: string
+) => {
+  const users = await dbClient.user.findMany({
+    where: {
+      NOT: {
+        id: userId,
+      },
+      ...(searchValue && {
+        OR: [
+          { email: { contains: searchValue, mode: "insensitive" } },
+          { name: { contains: searchValue, mode: "insensitive" } },
+          {
+            subjects: {
+              some: {
+                name: { contains: searchValue, mode: "insensitive" },
+              },
+            },
+          },
+        ],
+      }),
+    },
+  });
+
+  return users;
+};

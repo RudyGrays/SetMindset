@@ -5,7 +5,7 @@ import { CopyButton } from "@/widgets/CopyButton/ui/CopyButton";
 
 const Page = async () => {
   const session = await getAppSessionServer();
-  console.log(session);
+
   return (
     <div className="space-y-6 py-14 container h-[calc(100vh-60px-8px)]  max-w-[600px]">
       <EditableProfileCard user={session?.user!} />

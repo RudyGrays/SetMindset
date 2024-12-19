@@ -1,11 +1,10 @@
 import { AdminMiddleware } from "@/features/Admin/model/middleware/AdminMiddleware";
+import { AdminPanel } from "@/features/Admin/ui/admin-panel";
 
 const page = () => {
   return (
     <AdminMiddleware>
-      <div className="flex w-full h-full items-center justify-center">
-        В разработке...
-      </div>
+      <AdminPanel />
     </AdminMiddleware>
   );
 };
