@@ -45,6 +45,7 @@ export function DateTimePicker({
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
         <Calendar
+          disabled={(date) => date < new Date()}
           mode="single"
           selected={date}
           onSelect={(d) => handleSelect(d)}

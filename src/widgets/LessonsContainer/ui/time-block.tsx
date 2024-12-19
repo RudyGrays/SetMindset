@@ -43,6 +43,7 @@ export const TimeBlock = ({
               {date ? format(date, "PPP HH:mm:ss") : <span>Pick a date</span>}
             </Button>
             <Calendar
+              disabled={(date) => date < new Date()}
               onSelect={handleDateChange}
               mode="single"
               selected={date}

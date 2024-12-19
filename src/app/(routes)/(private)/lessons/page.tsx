@@ -1,6 +1,9 @@
 import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-session";
 import { LessonsContainer } from "@/widgets/LessonsContainer/ui/lessons-container";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Lessons",
+};
 const Page = async () => {
   const session = await getAppSessionServer();
   if (!session) return;

@@ -1,7 +1,10 @@
 import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-session";
 import { dbClient } from "@/shared/db/prisma.client";
 import { UsersContainer } from "@/widgets/UsersContainer/ui/users-container";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Friends",
+};
 const Page = async ({ params }: { params: Promise<{ userId: string }> }) => {
   const session = await getAppSessionServer();
   let currentUser = session?.user;

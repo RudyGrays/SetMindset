@@ -1,7 +1,10 @@
 import { SignInForm } from "@/features/Auth/ui/sign-in-form.server";
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
+import { Metadata } from "next";
 import Link from "next/link";
-
+export const metadata: Metadata = {
+  title: "Authorization",
+};
 export default function AuthenticationPage() {
   return (
     <>

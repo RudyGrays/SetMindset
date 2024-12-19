@@ -1,5 +1,8 @@
 import { Card, CardContent, CardHeader } from "@/shared/ui/card";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Verify request",
+};
 export default function VerifyRequestPage() {
   return (
     <div className="container relative  flex-col items-center justify-center self-center pt-24">
