@@ -30,7 +30,7 @@ export function AvatarField({
           <Spinner className="w-10 h-10" aria-label="Загрузка новой аватарки" />
         </div>
       )} */}
-      <AppAvatar className="w-[84px] h-[84px]  rounded-full" image={value} />
+      {/* <AppAvatar className="w-[84px] h-[84px]  rounded-full" user={user!} /> */}
     </Button>
   );
 }

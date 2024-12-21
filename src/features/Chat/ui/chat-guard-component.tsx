@@ -7,12 +7,15 @@ import { redirect, useRouter } from "next/navigation";
 import { Chat } from "./chat";
 import { Spinner } from "@/shared/ui/spinner";
 import { useSidebar } from "@/shared/ui/sidebar";
+import { useEffect } from "react";
+import { useChatId } from "./chat-context";
 
 export const ChatGuardComponent = ({ chatId }: { chatId: string }) => {
   const session = useSession();
   const myId = session.data?.user.id;
-  const router = useRouter();
+
   const { chat, isLoading } = useCurrentChat(chatId);
+  const { setChat } = useChatId();
 
   if (isLoading)
     return (

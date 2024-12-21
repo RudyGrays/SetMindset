@@ -22,6 +22,8 @@ import { useSendMessage } from "../model/hooks/use-send-message";
 import { nanoid } from "nanoid";
 import { formatDate } from "@/shared/lib/utils";
 import { ScrollArea } from "@/shared/ui/scroll-area";
+import { queryClient } from "@/shared/api/query-client";
+import { useChatId } from "./chat-context";
 interface ChatProps {
   currentUser: UserEntity;
   user2: UserEntity;
@@ -29,20 +31,31 @@ interface ChatProps {
   user2Messages?: Message[];
   chatId: string;
 }
+export interface MessageWithIsFirst extends Message {
+  isFirst: boolean;
+  isTime: boolean;
+}
 export const Chat: FC<ChatProps> = memo(
   ({ currentUser, user2, currentUserMessages, user2Messages, chatId }) => {
-    const [localMessages, setMessages] = useState<Message[]>([]);
+    const [localMessages, setMessages] = useState<any[]>([]);
     const [newMessageContent, setNewMessage] = useState("");
     const { socket } = useSocket();
     const { messages } = useMessages(localMessages);
 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const { setChat } = useChatId();
 
     useEffect(() => {
       if (messagesEndRef.current) {
         messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }, [messages]);
+
+    useEffect(() => {
+      setChat(chatId);
+
+      return () => setChat(undefined);
+    }, [chatId]);
 
     const newMessageInputHandler = (value: string) => {
       setNewMessage(value);
@@ -56,16 +69,41 @@ export const Chat: FC<ChatProps> = memo(
 
     const sendMessage = async () => {
       if (newMessageContent.length === 0) return;
-      const newMessage: Message = {
+      const date = new Date();
+      const newMessage: any = {
         id: parseInt(nanoid(10), 36) + Date.now(),
         chatId: +chatId,
         content: newMessageContent,
-        createdAt: new Date(),
+        createdAt: date.toLocaleString("ru-RU", {
+          day: "numeric",
+          month: "short",
+          hour: "numeric",
+          minute: "numeric",
+        }),
         senderId: currentUser.id!,
+        isFirst:
+          messages.length > 0
+            ? messages[messages.length - 1].senderId !== currentUser.id
+            : true,
+        isTime:
+          messages.length > 0
+            ? messages[messages.length - 1].createdAt.toLocaleString("ru-RU", {
+                day: "numeric",
+                month: "short",
+                hour: "numeric",
+                minute: "numeric",
+              }) !==
+              date.toLocaleString("ru-RU", {
+                day: "numeric",
+                month: "short",
+                hour: "numeric",
+                minute: "numeric",
+              })
+            : true,
       };
       setMessages((prev) => [...prev, newMessage]);
 
-      socket?.emit("sendMessage", chatId, newMessage);
+      socket?.emit("sendMessage", chatId, newMessage, user2);
 
       mutation.mutate(newMessage);
       setNewMessage("");
@@ -89,7 +127,7 @@ export const Chat: FC<ChatProps> = memo(
     );
 
     useEffect(() => {
-      let newMessages: Message[] = [];
+      let newMessages: any[] = [];
 
       if (currentUserMessages && currentUserMessages?.length > 0) {
         newMessages = [...newMessages, ...currentUserMessages];
@@ -98,7 +136,31 @@ export const Chat: FC<ChatProps> = memo(
         newMessages = [...newMessages, ...user2Messages];
       }
 
-      setMessages(newMessages.toSorted((x, y) => +x.createdAt - +y.createdAt));
+      const sorted = newMessages
+        .toSorted((x, y) => +x.createdAt - +y.createdAt)
+        .reduce((acc: MessageWithIsFirst[], message: MessageWithIsFirst) => {
+          let item;
+          if (!acc[0]) {
+            acc.push({ ...message, isFirst: true, isTime: true });
+            return acc;
+          }
+          if (acc[acc.length - 1].senderId === message.senderId) {
+            item = { ...message, isFirst: false };
+          } else {
+            item = { ...message, isFirst: true };
+          }
+          if (
+            formatDate(message.createdAt) ===
+            formatDate(acc[acc.length - 1].createdAt)
+          ) {
+            item.isTime = false;
+          } else {
+            item.isTime = true;
+          }
+          acc.push(item);
+          return acc;
+        }, []);
+      setMessages(sorted);
     }, [currentUserMessages, user2Messages]);
 
     return (

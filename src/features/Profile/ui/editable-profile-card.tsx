@@ -111,8 +111,7 @@ export const EditableProfileCard = ({
               <div className="flex w-full justify-center">
                 <AppAvatar
                   className="h-20 w-20"
-                  image={getValues().image!}
-                  username={user.name!}
+                  user={{ ...user, image: getValues().image! }}
                 />
               </div>
               <FormField

@@ -14,6 +14,10 @@ import Peer, { SignalData } from "simple-peer";
 import { useRouter } from "next/navigation";
 import { addOnlineUser } from "../model/actions/add-online-user";
 import { removeOnlineUser } from "../model/actions/remove-online-user";
+import { Message } from "@prisma/client";
+import { useChatId } from "@/features/Chat/ui/chat-context";
+import { getUserById } from "@/features/Users/model/actions/getUserById";
+import { toast } from "@/shared/hooks/use-toast";
 interface iSocketContext {
   socket?: Socket;
   isSocketConnected: boolean;
@@ -56,8 +60,6 @@ export const SocketContextProvider = ({
   const [socket, setSocket] = useState<Socket>();
   const [isSocketConnected, setSocketIsConnected] = useState<boolean>(false);
   const [peer, setPeer] = useState<PeerData>();
-
-  const router = useRouter();
 
   const myId = session?.user.id;
   //onlineUsers
@@ -270,7 +272,24 @@ export const SocketContextProvider = ({
     },
     [localStream, createPeer, peer, call]
   );
+  const { chat } = useChatId();
 
+  useEffect(() => {
+    socket?.on("receiveMessage", async (message: Message) => {
+      console.log(chat);
+      if (message.senderId === myId) return;
+      if (chat && +chat === message.chatId) return;
+      const sender = await getUserById(message.senderId);
+
+      toast({
+        title: `Пришло сообщение от пользователя ${sender?.name}`,
+      });
+    });
+
+    return () => {
+      socket?.off("receiveMessage");
+    };
+  }, [socket, session, chat]);
   useEffect(() => {
     if (!socket || !socket.connected || !session) return;
 

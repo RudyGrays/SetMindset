@@ -35,7 +35,7 @@ export const LessonUsersTable = ({
                 key={user.id}
               >
                 <TableCell>
-                  <AppAvatar image={user.image!} username={user.name!} />
+                  <AppAvatar user={user} />
                 </TableCell>
                 <TableCell className="text-sm ">{user.name}</TableCell>
                 {currentUser && currentUser.id === user.id ? (

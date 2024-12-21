@@ -43,11 +43,18 @@ app.prepare().then(async () => {
       socket.emit("chatJoined", `You have joined chat ${chatId}`);
     });
 
-    socket.on("sendMessage", (chatId, message) => {
+    socket.on("sendMessage", (chatId, message, user2) => {
       io.to(chatId).emit("receiveMessage", message);
+      const user2Socket = onlineUsers.find(
+        (socketUser) => socketUser.userId === user2.id
+      );
+      console.log(user2Socket);
+      io.to(user2Socket.socketId).emit("receiveMessageNotification", message);
     });
 
     socket.on("newOnlineUser", async (newUser) => {
+      console.log("new onlineUser", newUser.name);
+
       if (!onlineUsers.some((user) => user.userId === newUser.id)) {
         onlineUsers.push({
           userId: newUser.id,
@@ -55,8 +62,9 @@ app.prepare().then(async () => {
           profile: newUser,
         });
       }
-      console.log("currentOnlineUsers", onlineUsers);
+
       socket.emit("getOnlineUsers", onlineUsers);
+      io.emit("getOnlineUsers", onlineUsers);
     });
 
     socket.on("call", (participants) => {
@@ -94,8 +102,15 @@ app.prepare().then(async () => {
         }
       }
     });
+    socket.on("disconnect", () => {
+      console.log(`User disconnected: ${socket.id}`);
+
+      onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+
+      io.emit("getOnlineUsers", onlineUsers);
+    });
   });
-  io.on("disconnect", async (socket) => {});
+
   httpServer
     .once("error", (err) => {
       console.error(err);

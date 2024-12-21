@@ -25,7 +25,7 @@ export const UsersWithUpdateTable = () => {
   const { usersWithUpdate, isPending } = useGetUsersWithUpdate(myId!);
   const { acceptUserUpdatesMutate } = useAcceptUserUpdates();
   return (
-    <Table className="w-full h-full overflow-auto custom-scrollbar">
+    <Table className="w-full h-full py-2 overflow-auto custom-scrollbar">
       <TableCaption>A list of updated users</TableCaption>
       <TableHeader>
         <TableRow>
@@ -44,8 +44,7 @@ export const UsersWithUpdateTable = () => {
                   <AppAvatar
                     className="cursor-pointer"
                     onClick={() => router.push(`/profile/${user.id}`)}
-                    image={user.image!}
-                    username={user.name!}
+                    user={user}
                   />
                 </TableCell>
                 <TableCell>{user.name}</TableCell>

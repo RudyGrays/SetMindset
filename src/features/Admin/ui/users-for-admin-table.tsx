@@ -25,8 +25,8 @@ export const UsersForAdminTable = ({
   const { users, isLoading } = useUsersForAdmin(myId!, searchValue);
   const router = useRouter();
   return (
-    <div className="w-full max-h-full h-full ">
-      <Table>
+    <div className="w-full py-2 max-h-full h-full ">
+      <Table className="mb-2">
         <TableCaption>A list of all users</TableCaption>
         <TableHeader>
           <TableRow>
@@ -44,7 +44,7 @@ export const UsersForAdminTable = ({
                   onClick={() => router.push(`/profile/${user.id}`)}
                 >
                   <TableCell>
-                    <AppAvatar image={user.image!} username={user.name!} />
+                    <AppAvatar user={user} />
                   </TableCell>
                   <TableCell>{user.name}</TableCell>
                 </TableRow>

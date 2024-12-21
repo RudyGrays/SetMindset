@@ -64,10 +64,7 @@ export const Chats = () => {
                 }}
               >
                 <TableCell>
-                  <AppAvatar
-                    image={visibleUser(chat).image!}
-                    username={visibleUser(chat).name!}
-                  />
+                  <AppAvatar user={visibleUser(chat)} />
                 </TableCell>
                 <TableCell className="text-sm ">
                   {visibleUser(chat).name}

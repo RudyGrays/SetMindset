@@ -70,13 +70,10 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
       return toast({
         className: "w-max",
         description: (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             {errors.map((error) => {
               return (
-                <div
-                  className="text-red-500 border rounded-xl p-2 text-sm w-max"
-                  key={error}
-                >
+                <div className=" p-2 text-sm w-max" key={error}>
                   {error}
                 </div>
               );

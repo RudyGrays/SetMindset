@@ -29,24 +29,14 @@ import Link from "next/link";
 import { AppAvatar } from "@/widgets/AppAvatar/ui/app-avatar";
 import { Notifications } from "@/features/Notifications/ui/notifications";
 import { useRouter } from "next/navigation";
+import { UserEntity } from "@/entities/User/model/types/User";
 
-export function NavUser({
-  user,
-}: {
-  user?: {
-    name?: string | null;
-    email?: string | null;
-    image?: string | null;
-  };
-}) {
+export function NavUser({ user }: { user?: UserEntity }) {
   const { isMobile } = useSidebar();
   const { setOpenMobile } = useSidebar();
 
   const router = useRouter();
 
-  const closeSidebarHandler = () => {
-    setOpenMobile(false);
-  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -56,11 +46,7 @@ export function NavUser({
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <AppAvatar
-                className="h-8 w-8"
-                image={user?.image!}
-                username={user?.name!}
-              />
+              <AppAvatar className="h-8 w-8" user={user!} />
 
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user?.name}</span>
@@ -77,7 +63,7 @@ export function NavUser({
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <AppAvatar image={user?.image!} username={user?.name!} />
+                <AppAvatar user={user!} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">{user?.name}</span>
                   <span className="truncate text-xs">{user?.email}</span>

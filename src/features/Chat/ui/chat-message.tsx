@@ -6,6 +6,8 @@ import { Message } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect } from "react";
+import { MessageWithIsFirst } from "./chat";
+import { formatDate } from "@/shared/lib/utils";
 
 export const ChatMessage = ({
   user,
@@ -13,7 +15,7 @@ export const ChatMessage = ({
   isCurrentUser,
 }: {
   user: UserEntity;
-  message: Message;
+  message: MessageWithIsFirst;
   isCurrentUser: boolean;
 }) => {
   const messageDate = message.createdAt.toLocaleString("ru-RU", {
@@ -34,32 +36,31 @@ export const ChatMessage = ({
           isCurrentUser ? "items-end" : ""
         }`}
       >
-        <div
-          className={`flex ${
-            isCurrentUser ? "flex-row-reverse" : ""
-          } items-center gap-2`}
-        >
-          <Link href={`/profile/${user.id}`}>
-            <AppAvatar
-              className="w-9 h-9 rounded-full"
-              image={user.image!}
-              username={user.name!}
-            />
-          </Link>
-
+        {message.isFirst ? (
           <div
-            className={
-              "flex gap-4 items-center" +
-              `${!isCurrentUser && " flex-row-reverse"}`
-            }
+            className={`flex ${
+              isCurrentUser ? "flex-row-reverse" : ""
+            } items-center gap-2`}
           >
-            <span className="text-[0.6rem] flex items-center">
-              {messageDate}
-            </span>
-            <span>{user.name}</span>
-          </div>
-        </div>
+            <Link href={`/profile/${user.id}`}>
+              <AppAvatar className="w-9 h-9 rounded-full" user={user} />
+            </Link>
 
+            <div
+              className={
+                "flex gap-4 items-center" +
+                `${!isCurrentUser && " flex-row-reverse"}`
+              }
+            >
+              <span className="text-[0.6rem] flex items-center">
+                {messageDate}
+              </span>
+              <span>{user.name}</span>
+            </div>
+          </div>
+        ) : (
+          message.isTime && <span className="text-[0.6rem]">{messageDate}</span>
+        )}
         <div
           className={`max-w-[50%] w-max  p-2 rounded-lg break-words ${
             isCurrentUser ? "bg-primary-foreground" : "bg-accent"

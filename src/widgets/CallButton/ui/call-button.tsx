@@ -1,5 +1,6 @@
 "use client";
 import { useSocket } from "@/features/Socket/ui/socket-context";
+import { useToast } from "@/shared/hooks/use-toast";
 import { Button } from "@/shared/ui/button";
 import { Video } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,19 +12,22 @@ export const CallButton = ({ userId }: { userId?: string }) => {
   const receiverSocketUser = onlineUsers?.find(
     (ruser) => ruser.userId === userId
   );
-
+  const { toast } = useToast();
   return (
     <Button
       className="flex gap-2 items-center hover:bg-background p-2 rounded"
       variant={"ghost"}
       onClick={() => {
         console.log("asdasd");
-        if (!receiverSocketUser)
-          return console.log(
-            "Некому звонить, пользователь не онлайн",
-            onlineUsers
-          );
-        console.log("Начинаем звонок пользователю", receiverSocketUser);
+        if (!receiverSocketUser) {
+          return toast({
+            title: "Пользователь не онлайн!",
+          });
+        }
+
+        toast({
+          title: "Начинаем видеозвонок!",
+        });
         handleCall(receiverSocketUser);
         router.push(`/video-call/${userId}`);
       }}

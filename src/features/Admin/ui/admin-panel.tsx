@@ -36,6 +36,7 @@ export const AdminPanel = () => {
         <div className="h-1/2 max-h-[50%] w-full flex flex-col gap-1 border-b">
           <Input
             value={value}
+            className="py-2 rounded-xl"
             onChange={(e) => setValue(e.target.value)}
             placeholder="Поиск..."
           />

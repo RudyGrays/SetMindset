@@ -24,11 +24,7 @@ export const ProfileCard = ({ user }: { user: UserEntity }) => {
     <Card className="max-h-full overflow-auto custom-scrollbar p-4 relative">
       <CardHeader>
         <CardTitle className="flex justify-center">
-          <AppAvatar
-            className="h-20 w-20"
-            image={user.image!}
-            username={user.name!}
-          />
+          <AppAvatar className="h-20 w-20" user={user} />
         </CardTitle>
       </CardHeader>
 

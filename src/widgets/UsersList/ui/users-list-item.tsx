@@ -46,11 +46,7 @@ export const UsersListItem = ({
       <div className="p-2 flex justify-between items-center">
         <div className="flex gap-2 items-center">
           <Link href={`/profile/${user.id}`}>
-            <AppAvatar
-              className="border h-16 w-16"
-              image={user.image!}
-              username={user.name!}
-            />
+            <AppAvatar className="border h-16 w-16" user={user} />
           </Link>
           <div className="flex flex-col gap-3">
             <p className="font-semibold px-2">{user.name}</p>
