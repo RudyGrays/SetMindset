@@ -11,27 +11,31 @@ import {
   DialogTitle,
 } from "@/shared/ui/dialog";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export const CallNotification = () => {
-  const { call, handleJoinCall } = useSocket();
+  const { OngoingCall, handleJoinCall } = useSocket();
   const session = useSession();
   const user = session.data?.user;
-
+  const router = useRouter();
   return (
-    <Dialog open={call?.isRinging}>
+    <Dialog open={OngoingCall?.isRinging}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="sr-only">Звонок</DialogTitle>
           <DialogDescription>
             <span>
-              Входящий звонок от {call?.participants.caller.profile.name}
+              Входящий звонок от {OngoingCall?.participants.caller.profile.name}
             </span>
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button
             onClick={() => {
-              call && handleJoinCall(call);
+              OngoingCall && handleJoinCall(OngoingCall);
+              router.push(
+                `/Video-call/${OngoingCall?.participants.caller.userId}`
+              );
             }}
           >
             Принять

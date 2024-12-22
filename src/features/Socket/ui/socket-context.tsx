@@ -24,8 +24,8 @@ interface iSocketContext {
   handleCall: (receiver: SocketUser) => void;
   onlineUsers?: SocketUser[];
   localStream?: MediaStream;
-  handleJoinCall: (call: Call) => void;
-  call?: Call;
+  handleJoinCall: (call: OngoingCall) => void;
+  OngoingCall?: OngoingCall;
   peer?: PeerData;
 }
 export interface SocketUser {
@@ -33,7 +33,7 @@ export interface SocketUser {
   socketId: string;
   profile: UserEntity;
 }
-export interface Call {
+export interface OngoingCall {
   participants: Participants;
   isRinging: boolean;
 }
@@ -103,11 +103,11 @@ export const SocketContextProvider = ({
   );
 
   //call
-  const [call, setCall] = useState<Call>();
+  const [OngoingCall, setOngoingCall] = useState<OngoingCall>();
 
   const handleJoinCall = useCallback(
-    async (call: Call) => {
-      setCall((prev) => {
+    async (call: OngoingCall) => {
+      setOngoingCall((prev) => {
         if (prev) {
           return { ...prev, isRinging: false };
         }
@@ -150,7 +150,7 @@ export const SocketContextProvider = ({
 
   const handleCall = useCallback(
     async (receiver: SocketUser) => {
-      if (call) return;
+      if (OngoingCall) return;
       if (!currentSocketUser || !socket) return;
 
       const stream = await getMediaStream();
@@ -164,22 +164,22 @@ export const SocketContextProvider = ({
         receiver: receiver,
       };
 
-      setCall({ participants, isRinging: false });
+      setOngoingCall({ participants, isRinging: false });
       socket?.emit("call", participants);
     },
-    [socket, currentSocketUser, call]
+    [socket, currentSocketUser, OngoingCall]
   );
 
   const handleHangup = useCallback(({}) => {}, []);
 
   const onIncomingCallHandle = useCallback(
     (participants: Participants) => {
-      setCall({
+      setOngoingCall({
         participants,
         isRinging: true,
       });
     },
-    [socket, currentSocketUser, setCall]
+    [socket, currentSocketUser, setOngoingCall]
   );
 
   //peer
@@ -226,13 +226,13 @@ export const SocketContextProvider = ({
       };
       return peer;
     },
-    [call, setPeer]
+    [OngoingCall, setPeer]
   );
 
   const completePeerConnection = useCallback(
     async (connectionData: {
       sdp: SignalData;
-      ongoingCall: Call;
+      ongoingCall: OngoingCall;
       isCaller: boolean;
     }) => {
       if (!localStream) {
@@ -259,7 +259,7 @@ export const SocketContextProvider = ({
           console.log("emit offer");
           socket.emit("webrtcSignal", {
             sdp: data,
-            ongoingCall: call,
+            ongoingCall: OngoingCall,
             isCaller: true,
           });
         }
@@ -270,7 +270,7 @@ export const SocketContextProvider = ({
         newPeer.off("signal", signal);
       };
     },
-    [localStream, createPeer, peer, call]
+    [localStream, createPeer, peer, OngoingCall]
   );
   const { chat } = useChatId();
 
@@ -364,7 +364,7 @@ export const SocketContextProvider = ({
         isSocketConnected,
         handleCall,
         localStream,
-        call,
+        OngoingCall,
         onlineUsers,
         peer,
       }}

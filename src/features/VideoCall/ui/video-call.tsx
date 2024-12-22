@@ -13,7 +13,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 export const VideoCall = ({ userId }: { userId: string }) => {
-  const { socket, call, peer, onlineUsers, localStream } = useSocket();
+  const { socket, OngoingCall, peer, onlineUsers, localStream } = useSocket();
 
   const session = useSession();
 
@@ -26,7 +26,7 @@ export const VideoCall = ({ userId }: { userId: string }) => {
     (chat) => chat.user1Id === myId || chat.user2Id === myId
   );
 
-  const isOnCall = localStream && peer && call ? true : false;
+  const isOnCall = localStream && peer && OngoingCall ? true : false;
   return (
     <div className="rounded w-full max-w-[800px] max-h-full flex flex-col items-center gap-1">
       <div className="h-1/2 relative">
