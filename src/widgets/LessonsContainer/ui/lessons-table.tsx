@@ -35,12 +35,12 @@ export const LessonsTable = ({
       <Table className="">
         <TableHeader>
           <TableRow>
-            <TableHead>Предмет</TableHead>
-            <TableHead>Учитель</TableHead>
-            <TableHead>Ученик</TableHead>
-            <TableHead>Цена</TableHead>
-            <TableHead>Дата</TableHead>
-            <TableHead>Действие</TableHead>
+            <TableHead>Subject</TableHead>
+            <TableHead>Teacher</TableHead>
+            <TableHead>Student</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

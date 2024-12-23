@@ -39,7 +39,7 @@ export const UsersContainer = ({
           className=""
           value={searchValue}
           onChange={(e) => changeSearchValue(e.target.value)}
-          placeholder="Поиск пользователя..."
+          placeholder="Find user..."
         />
         {searchType === "friends" ? (
           <FriendsList user={selectedUser} />

@@ -29,10 +29,10 @@ export const UsersWithUpdateTable = () => {
       <TableCaption>A list of updated users</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead>Аватар</TableHead>
-          <TableHead>Имя пользователя</TableHead>
-          <TableHead>Дата обновления</TableHead>
-          <TableHead>Действие</TableHead>
+          <TableHead>Avatar</TableHead>
+          <TableHead>Username</TableHead>
+          <TableHead>Date of update</TableHead>
+          <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -56,7 +56,7 @@ export const UsersWithUpdateTable = () => {
                     }}
                     variant={"outline"}
                   >
-                    Подтвердить
+                    Accept
                   </Button>
                 </TableCell>
               </TableRow>
@@ -73,7 +73,7 @@ export const UsersWithUpdateTable = () => {
         ) : (
           <TableRow>
             <TableCell />
-            <TableCell>Список пуст</TableCell>
+            <TableCell>Empty list</TableCell>
             <TableCell />
           </TableRow>
         )}

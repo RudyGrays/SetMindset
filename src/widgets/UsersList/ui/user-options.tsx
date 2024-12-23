@@ -38,7 +38,7 @@ export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
         <DropdownMenuItem>
           <Link href={`/profile/${user.id}`}>Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem className="cursor-pointer" asChild>
           <Link href={`/friends/${user.id}`}>Friends</Link>
         </DropdownMenuItem>
         {!user.isFriend && (
@@ -52,6 +52,7 @@ export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
         )}
         {user.isFriend && (
           <DropdownMenuItem
+            className="cursor-pointer"
             onClick={async () => {
               await removeFriend(myId!, user.id!);
               queryClient.refetchQueries({
@@ -62,7 +63,7 @@ export const UserOptions = ({ user }: { user: UserWithIsFriend }) => {
               });
             }}
           >
-            Delete friend
+            Delete from friends
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

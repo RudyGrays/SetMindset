@@ -111,7 +111,7 @@ export const Notifications = () => {
               return (
                 <div
                   key={notification.id}
-                  className="flex items-center w-full border rounded-xl p-1 max-w-full"
+                  className="flex items-center w-full  rounded-xl p-1 max-w-full"
                 >
                   {notification.type === "request friend" && (
                     <div className="flex w-full items-center justify-between">

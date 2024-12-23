@@ -1,29 +1,9 @@
 "use client";
 import Image from "next/image";
-import logo from "@/shared/images/Logo.webp";
-import Link from "next/link";
-import { useIsMobile } from "../hooks/use-mobile";
-import { cn } from "../lib/utils";
+import Logo2 from "../images/morty.webp";
 
-export const AppLogo = () => {
-  const isMobile = useIsMobile();
-
-  const size = isMobile ? 70 : 100;
-
+export const Logo = () => {
   return (
-    <div
-      className={cn("max-h-[140px]  flex justify-center items-center px-2 ")}
-    >
-      <Link href={"/"}>
-        <Image
-          width={size}
-          height={size}
-          className="rounded-br-[20%] rounded-bl-[20%] object-contain"
-          src={logo}
-          alt="Логотип"
-          priority={true}
-        />
-      </Link>
-    </div>
+    <Image className="rounded-xl w-10 h-10 min-w-max" src={Logo2} alt="#" />
   );
 };

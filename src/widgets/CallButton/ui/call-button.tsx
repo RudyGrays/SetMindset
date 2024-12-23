@@ -18,7 +18,6 @@ export const CallButton = ({ userId }: { userId?: string }) => {
       className="flex gap-2 items-center hover:bg-background p-2 rounded"
       variant={"ghost"}
       onClick={() => {
-        console.log("asdasd");
         if (!receiverSocketUser) {
           return toast({
             title: "Пользователь не онлайн!",
@@ -28,8 +27,8 @@ export const CallButton = ({ userId }: { userId?: string }) => {
         toast({
           title: "Начинаем видеозвонок!",
         });
-        handleCall(receiverSocketUser);
-        router.push(`/video-call/${userId}`);
+        // handleCall(receiverSocketUser);
+        // router.push(`/video-call/${userId}`);
       }}
     >
       <Video size={22} />

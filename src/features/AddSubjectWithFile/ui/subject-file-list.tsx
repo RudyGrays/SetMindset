@@ -46,10 +46,10 @@ export const SubjectAndFileList = ({ list }: { list: any }) => {
         <TableCaption>A list of users subjects</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Предмет</TableHead>
-            <TableHead>Название файла</TableHead>
-            <TableHead>Статус</TableHead>
-            <TableHead>Скачать</TableHead>
+            <TableHead>Subject</TableHead>
+            <TableHead>Filename</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Download</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -75,12 +75,12 @@ export const SubjectAndFileList = ({ list }: { list: any }) => {
                       }}
                     >
                       {isAdmin && !subject.documents[0].isOk
-                        ? "Подтвердить"
+                        ? "Accept"
                         : isAdmin
-                        ? "Проверено"
+                        ? "Accepted"
                         : subject.documents[0].isOk
-                        ? "Проверено"
-                        : "Не проверено"}
+                        ? "Accepted"
+                        : "Not accepted"}
                     </Button>
                   </TableCell>
                   <TableCell>

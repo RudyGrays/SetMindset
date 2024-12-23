@@ -18,7 +18,7 @@ export const getSidebarItems = (
 ) => {
   if (tryAuth && !isAuth) return [];
   if (!isAuth && !tryAuth)
-    return [{ title: "Log in", url: "/api/auth/signin", icon: LogIn }];
+    return [{ title: "Log-in", url: "/api/auth/signin", icon: LogIn }];
 
   if (isAdmin)
     return [

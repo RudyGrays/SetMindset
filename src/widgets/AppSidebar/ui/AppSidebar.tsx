@@ -25,6 +25,7 @@ import { FC } from "react";
 import { getSidebarItems } from "../model/config/sidebarItemsData";
 
 import Link from "next/link";
+import { Logo } from "@/shared/ui/app-logo";
 
 interface AppSidebarProps {
   someClasses?: string;
@@ -33,7 +34,7 @@ interface AppSidebarProps {
 const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
   const isMobile = useIsMobile();
   const session = useSession();
-  const { setOpen, setOpenMobile } = useSidebar();
+  const { setOpen, setOpenMobile, open } = useSidebar();
 
   const closeSidebarHandler = () => {
     setOpenMobile(false);
@@ -51,10 +52,32 @@ const AppSidebar: FC<AppSidebarProps> = ({ someClasses, ...props }) => {
     <div className="relative">
       <Sidebar collapsible="icon">
         <SidebarContent className="">
-          <SidebarGroup className="mt-[15%]">
-            <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroup className="">
+            {open && (
+              <Link href={"/"}>
+                <SidebarGroupLabel className="cursor-pointer mb-[15%] h-header flex gap-2 items-center">
+                  <Logo />
+                  <span className="text-xl flex gap-1 relative overflow-hidden">
+                    <span>
+                      <span className="text-primary ">S</span>et
+                    </span>
+
+                    <span>
+                      <span className="text-primary">M</span>indset
+                    </span>
+                  </span>
+                </SidebarGroupLabel>
+              </Link>
+            )}
             <SidebarGroupContent>
               <SidebarMenu>
+                {!open && (
+                  <Link href={"/"}>
+                    <SidebarMenuItem className="flex justify-center h-header items-center">
+                      <Logo />
+                    </SidebarMenuItem>
+                  </Link>
+                )}
                 {items.map((item) => (
                   <SidebarMenuItem key={item?.title}>
                     <SidebarMenuButton asChild>

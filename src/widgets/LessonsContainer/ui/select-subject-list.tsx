@@ -32,6 +32,7 @@ export const SelectSubjectList = ({
           {items.map((subject) => {
             return (
               <SelectItem
+                className="cursor-pointer"
                 onSelect={() => handleChangeSubject(subject.id)}
                 key={subject.id}
                 value={subject.id}

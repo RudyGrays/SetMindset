@@ -88,17 +88,17 @@ export const EditableProfileCard = ({
         data={`${process.env.NEXT_PUBLIC_URL}/profile/${user.id}`}
         className={"absolute top-3 right-2"}
       >
-        Поделиться профилем
+        Share profile
       </CopyButton>
       <CardContent>
         {myRole === "ADMIN" && user.id !== myId && user.canTeach ? (
           <div className="flex flex-col w-full gap-1">
-            Рейтинг преподавателя: <Stars userId={user.id!} />
-            Вы поставили: <SelectedStars myId={myId!} userId={user.id!} />
+            Teacher rating: <Stars userId={user.id!} />
+            You'r rate: <SelectedStars myId={myId!} userId={user.id!} />
           </div>
         ) : user.canTeach ? (
           <div className="flex flex-col w-full">
-            Рейтинг преподавателя: <Stars userId={user.id!} />
+            Teacher rating: <Stars userId={user.id!} />
           </div>
         ) : null}
 
@@ -118,7 +118,7 @@ export const EditableProfileCard = ({
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Аватар</FormLabel>
+                    <FormLabel>Avatar</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Ссылка на картинку..." />
                     </FormControl>
@@ -129,7 +129,7 @@ export const EditableProfileCard = ({
                 name="name"
                 render={({ field, fieldState }) => (
                   <FormItem>
-                    <FormLabel>Имя</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input {...field} placeholder="Имя пользователя..." />
                     </FormControl>

@@ -57,13 +57,13 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
       errors.push("Выбери дату!");
     }
     if (!price || price === "" || price === "0") {
-      errors.push("Укажи цену за урок!");
+      errors.push("Specify the price for the lesson!");
     }
     if (!student) {
-      errors.push("Выбери ученика!");
+      errors.push("Pick student!");
     }
     if (!subjectId) {
-      errors.push("Выбери предмет!");
+      errors.push("Pick subject!");
     }
 
     if (errors.length > 0 || !date)
@@ -103,7 +103,13 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
       isMobile={isMobile}
     >
       <div className="flex flex-col w-full ">
-        <div className={"flex w-full   " + `${isLess && " flex-col-reverse"}`}>
+        <h1 className="text-center mb-1">Assign a lesson</h1>
+        <div
+          className={
+            "flex w-full   " +
+            `${isLess && " flex-col-reverse"} border rounded-xl`
+          }
+        >
           <ActionsBlock isMobile={isMobile}>
             <TimeBlock
               date={date}
@@ -142,7 +148,7 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
                       currentUser={student}
                     />
                   ) : (
-                    <div className="w-full text-center">Список друзей пуст</div>
+                    <div className="w-full text-center">Empty friends list</div>
                   )}
                 </div>
                 {SubjectsAndFiles?.canTeach && (
@@ -150,7 +156,7 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
                     <Input
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      placeholder="Цена"
+                      placeholder="Price"
                     />
                     <DollarSign className="absolute top-2 right-1 w-4 h-4" />
                   </div>
@@ -165,7 +171,7 @@ export const AddLessonBlock = ({ user }: { user: UserEntity }) => {
                   ) : (
                     <Link href={`/profile`} className="w-full">
                       <Button variant={"outline"} className="w-full">
-                        Добавить предмет
+                        Add subject
                       </Button>
                     </Link>
                   )}

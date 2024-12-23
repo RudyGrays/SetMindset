@@ -53,48 +53,51 @@ export const LessonsListBlock = ({
     <div
       className={"p-3  min-w-[30%] flex-grow   flex " + ` ${isLess ? "" : ""}`}
     >
-      <div className="w-full max-h-full border rounded-xl flex flex-col ">
-        <div className="flex p-2 gap-2   flex-wrap justify-between  overflow-auto custom-scrollbar">
-          <Input
-            className="w-[165px]"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Имя пользователя"
-          />
-          {subjects && (
-            <SelectSubjectList
-              currentSubjectId={String(subjectId)}
-              handleChangeSubject={handleSubjectChange}
-              items={subjects}
+      <div className="w-full max-h-full  flex flex-col ">
+        <h1 className="text-center mb-1">Lessons</h1>
+        <div className="border rounded-xl h-full w-full">
+          <div className="flex p-2 gap-2   flex-wrap justify-between  overflow-auto custom-scrollbar">
+            <Input
+              className="w-[165px]"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Username"
             />
-          )}
-          <DatePickerWithRange handleChange={handleDateChange} date={date} />
-          <div className="flex gap-1  items-center">
-            <Switch
-              defaultChecked={false}
-              id="direction-mode"
-              onCheckedChange={(isChecked) =>
-                setDirection(isChecked ? "desc" : "asc")
-              }
-            />
-            <Label htmlFor="direction-mode" className="w-[30px]">
-              {direction}
-            </Label>
-          </div>
-          <Button
-            onClick={() => {
-              setDate(undefined);
+            {subjects && (
+              <SelectSubjectList
+                currentSubjectId={String(subjectId)}
+                handleChangeSubject={handleSubjectChange}
+                items={subjects}
+              />
+            )}
+            <DatePickerWithRange handleChange={handleDateChange} date={date} />
+            <div className="flex gap-1  items-center">
+              <Switch
+                defaultChecked={false}
+                id="direction-mode"
+                onCheckedChange={(isChecked) =>
+                  setDirection(isChecked ? "desc" : "asc")
+                }
+              />
+              <Label htmlFor="direction-mode" className="w-[30px]">
+                {direction}
+              </Label>
+            </div>
+            <Button
+              onClick={() => {
+                setDate(undefined);
 
-              setSubjectId(undefined);
-            }}
-            className="w-[70px]"
-            variant={"outline"}
-          >
-            <X />
-          </Button>
-        </div>
-        <div className="flex-grow-[4] overflow-auto custom-scrollbar">
-          <LessonsTable isLoading={isLoading} lessons={lessons} />
+                setSubjectId(undefined);
+              }}
+              className="w-[70px]"
+              variant={"outline"}
+            >
+              <X />
+            </Button>
+          </div>
+          <div className="flex-grow-[4] overflow-auto custom-scrollbar">
+            <LessonsTable isLoading={isLoading} lessons={lessons} />
+          </div>
         </div>
       </div>
     </div>

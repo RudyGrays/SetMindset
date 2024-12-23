@@ -31,15 +31,15 @@ export const ProfileCard = ({ user }: { user: UserEntity }) => {
       <CardContent className="flex flex-col gap-4">
         {user.canTeach && (
           <div className="flex flex-col w-full gap-1">
-            Рейтинг преподавателя: <Stars userId={user.id!} />
-            Вы поставили: <SelectedStars myId={myId!} userId={user.id!} />
+            Teacher rating: <Stars userId={user.id!} />
+            You'r rate: <SelectedStars myId={myId!} userId={user.id!} />
           </div>
         )}
         <CopyButton
           data={`${process.env.NEXT_PUBLIC_URL}/profile/${user.id}`}
           className={"absolute top-3 right-2"}
         >
-          Поделиться профилем
+          Share profile
         </CopyButton>
         <div>Username: {user.name}</div>
         <label className="flex gap-3 items-center">

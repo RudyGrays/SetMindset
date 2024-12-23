@@ -30,8 +30,8 @@ export const UsersForAdminTable = ({
         <TableCaption>A list of all users</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead>Аватар</TableHead>
-            <TableHead>Имя пользователя</TableHead>
+            <TableHead>Avatar</TableHead>
+            <TableHead>Username</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -61,7 +61,7 @@ export const UsersForAdminTable = ({
           ) : (
             <TableRow>
               <TableCell />
-              <TableCell>Список пуст</TableCell>
+              <TableCell>Empty list</TableCell>
               <TableCell />
             </TableRow>
           )}

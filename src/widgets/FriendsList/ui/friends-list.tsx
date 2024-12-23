@@ -22,7 +22,7 @@ export const FriendsList = ({
     );
   return (
     <div className="h-full   w-full  flex flex-col items-center  p-3 pt-6">
-      <div>{`${user.id === myId ? "Your's" : user.name}'s friends`}</div>
+      <div>{`${user.id === myId ? "Your" : `${user.name}'s`} friends`}</div>
 
       <UsersList users={friends!} />
     </div>

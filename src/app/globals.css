@@ -115,3 +115,15 @@ body {
     border-radius: 10px;
   }
 }
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+  100% {
+    left: -100%;
+  }
+}

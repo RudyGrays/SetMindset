@@ -54,6 +54,14 @@ export const ChatRepository = {
     });
   },
 
+  deleteMessage: async (messageId: number) => {
+    return dbClient.message.delete({
+      where: {
+        id: messageId,
+      },
+    });
+  },
+
   getMessagesForChat: async (chatId: number) => {
     return dbClient.message.findMany({
       where: {

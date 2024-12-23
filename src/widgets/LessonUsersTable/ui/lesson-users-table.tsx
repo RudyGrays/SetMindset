@@ -39,8 +39,8 @@ export const LessonUsersTable = ({
                 </TableCell>
                 <TableCell className="text-sm ">{user.name}</TableCell>
                 {currentUser && currentUser.id === user.id ? (
-                  <TableCell className="font-medium">
-                    <Check />
+                  <TableCell className="text-sm">
+                    <Check className="w-4 h-4" />
                   </TableCell>
                 ) : (
                   <TableCell className="font-medium"></TableCell>

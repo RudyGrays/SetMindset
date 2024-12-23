@@ -80,7 +80,7 @@ export const UsersListItem = ({
               </Button>
             )}
             {!user.isFriend && user.isRequest && user.requesterId === myId && (
-              <div className="text-sm">Запрос отправлен</div>
+              <div className="text-sm">Request send</div>
             )}
             {!user.isFriend && user.isRequest && user.requesterId !== myId ? (
               <Button
@@ -92,7 +92,7 @@ export const UsersListItem = ({
                   });
                 }}
               >
-                Принять запрос дружбы
+                Accept request
               </Button>
             ) : null}
           </div>

@@ -170,6 +170,7 @@ export const Chat: FC<ChatProps> = memo(
             messages.map((message, id, arr) => {
               return (
                 <ChatMessage
+                  messages={localMessages}
                   message={message}
                   user={getUser(message)}
                   key={message.id}

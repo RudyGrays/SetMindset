@@ -32,6 +32,7 @@ export const SelectSubject = ({
             if (!subject.documents[0].isOk) return;
             return (
               <SelectItem
+                className="cursor-pointer"
                 onSelect={() => handleChangeSubject(String(subject.id))}
                 key={subject.id}
                 value={String(subject.id)}

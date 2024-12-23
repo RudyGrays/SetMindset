@@ -8,15 +8,27 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { MessageWithIsFirst } from "./chat";
 import { formatDate } from "@/shared/lib/utils";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/shared/ui/context-menu";
+import { deleteMessage } from "../model/actions/delete-message";
+import { useToast } from "@/shared/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
+import { useMessages } from "../model/hooks/use-messages";
 
 export const ChatMessage = ({
   user,
   message,
   isCurrentUser,
+  messages,
 }: {
   user: UserEntity;
   message: MessageWithIsFirst;
   isCurrentUser: boolean;
+  messages: any[];
 }) => {
   const messageDate = message.createdAt.toLocaleString("ru-RU", {
     day: "numeric",
@@ -24,6 +36,8 @@ export const ChatMessage = ({
     hour: "numeric",
     minute: "numeric",
   });
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   return (
     <div
@@ -61,13 +75,33 @@ export const ChatMessage = ({
         ) : (
           message.isTime && <span className="text-[0.6rem]">{messageDate}</span>
         )}
-        <div
-          className={`max-w-[50%] w-max  p-2 rounded-lg break-words ${
-            isCurrentUser ? "bg-primary-foreground" : "bg-accent"
-          }`}
-        >
-          {message.content}
-        </div>
+        <ContextMenu>
+          <ContextMenuTrigger asChild>
+            <div
+              className={`max-w-[50%] w-max  p-2 rounded-lg break-words ${
+                isCurrentUser ? "bg-primary-foreground" : "bg-accent"
+              }`}
+            >
+              {message.content}
+            </div>
+          </ContextMenuTrigger>
+          <ContextMenuContent>
+            <ContextMenuItem
+              className="cursor-pointer"
+              onClick={async () => {
+                const deletedMessage = await deleteMessage(message.id);
+                toast({
+                  title: "Сообщение удалено!",
+                });
+                queryClient.refetchQueries({
+                  queryKey: ["messages", messages],
+                });
+              }}
+            >
+              Delete message
+            </ContextMenuItem>
+          </ContextMenuContent>
+        </ContextMenu>
       </div>
     </div>
   );

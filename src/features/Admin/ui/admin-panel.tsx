@@ -38,14 +38,14 @@ export const AdminPanel = () => {
             value={value}
             className="py-2 rounded-xl"
             onChange={(e) => setValue(e.target.value)}
-            placeholder="Поиск..."
+            placeholder="Search..."
           />
           <div className="flex-grow overflow-auto custom-scrollbar">
             <UsersForAdminTable searchValue={debouncedValue} />
           </div>
         </div>
         <div className="h-1/2 w-full flex items-center justify-center">
-          some info...
+          Some info...
         </div>
       </div>
     </div>
