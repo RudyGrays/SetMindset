@@ -1,13 +1,13 @@
 import { Guide } from "../type/guides";
-import img1 from "../../../../shared/images/1.jpg";
-import img2 from "../../../../shared/images/2.jpg";
-import img3 from "../../../../shared/images/3.jpg";
-import img4 from "../../../../shared/images/4.jpg";
-import img5 from "../../../../shared/images/5.jpg";
-import img6 from "../../../../shared/images/6.jpg";
-import img7 from "../../../../shared/images/7.jpg";
-import img8 from "../../../../shared/images/8.jpg";
-import img9 from "../../../../shared/images/9.jpg";
+import img1 from "@/shared/images/1.jpg";
+import img2 from "@/shared/images/2.jpg";
+import img3 from "@/shared/images/3.jpg";
+import img4 from "@/shared/images/4.jpg";
+import img5 from "@/shared/images/5.jpg";
+import img6 from "@/shared/images/6.jpg";
+import img7 from "@/shared/images/7.jpg";
+import img8 from "@/shared/images/8.jpg";
+import img9 from "@/shared/images/9.jpg";
 
 export const GuidesConf: Guide[] = [
   {

@@ -13,7 +13,7 @@ import {
 } from "react";
 import { ChatMessage } from "./chat-message";
 import { Button } from "@/shared/ui/button";
-import { useSidebar } from "@/shared/ui/sidebar";
+
 import { Input } from "@/shared/ui/input";
 import { useSocket } from "@/features/Socket/ui/socket-context";
 import { useMessages } from "../model/hooks/use-messages";
@@ -21,8 +21,7 @@ import { useSendMessage } from "../model/hooks/use-send-message";
 
 import { nanoid } from "nanoid";
 import { formatDate } from "@/shared/lib/utils";
-import { ScrollArea } from "@/shared/ui/scroll-area";
-import { queryClient } from "@/shared/api/query-client";
+
 import { useChatId } from "./chat-context";
 interface ChatProps {
   currentUser: UserEntity;

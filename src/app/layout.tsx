@@ -12,6 +12,7 @@ import { Header } from "@/widgets/Header/ui/Header";
 
 import { Toaster } from "@/shared/ui/toaster";
 import { CallNotification } from "@/widgets/CallNotification/ui/CallNotification";
+import { getAppSessionServer } from "@/features/Auth/model/lib/get-server-session";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,11 +30,13 @@ export const metadata: Metadata = {
   description: "Web App for you!",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getAppSessionServer();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -44,12 +47,14 @@ export default function RootLayout({
             <div className="flex-shrink">
               <AppSidebar />
             </div>
-            <div className="w-full min-h-full flex flex-col flex-grow">
-              <div className="flex pt-2 px-2 ">
-                <Header />
-              </div>
+            <div className="w-full min-h-full  flex flex-col flex-grow">
+              {user?.user && (
+                <div className="flex pt-2 px-2 ">
+                  <Header />
+                </div>
+              )}
               <Container>
-                <main className=" px-2 py-2 h-[calc(100vh-60px-8px)]  flex w-full">
+                <main className=" px-2 py-2 h-[calc(100vh-60px-8px)]   flex w-full">
                   <div className="h-full w-full  rounded overflow-hidden">
                     {children}
                   </div>

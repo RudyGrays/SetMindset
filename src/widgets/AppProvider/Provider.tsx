@@ -25,7 +25,9 @@ export const AppProvider: FC<AppProviderProps> = ({ children }) => {
               enableSystem
               disableTransitionOnChange
             >
-              <SidebarProvider className="h-full">{children}</SidebarProvider>
+              <SidebarProvider className="w-[100vw] h-[100vh]">
+                {children}
+              </SidebarProvider>
             </ThemeProvider>
           </SocketProvider>
         </ChatProvider>

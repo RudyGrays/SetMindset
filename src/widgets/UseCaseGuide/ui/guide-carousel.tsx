@@ -13,8 +13,8 @@ import Image from "next/image";
 
 export const GuideCarousel = ({ guides }: { guides?: Guide[] }) => {
   return (
-    <Carousel className="max-w-[70%] max-h-[90%]">
-      <CarouselContent className="h-full items-center ">
+    <Carousel className="max-w-[70%] border border-yellow-400">
+      <CarouselContent className="h-full border border-yellow-400 items-center max-w-full">
         {guides?.map((guide, index) => (
           <CarouselItem key={guide.queue}>
             <div className="p-1">
