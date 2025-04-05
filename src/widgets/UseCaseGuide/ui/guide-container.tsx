@@ -5,12 +5,12 @@ import { GuideCarousel } from "./guide-carousel";
 import { GuidesConf } from "../model/config/guides-conf";
 
 export const GuideContainer = () => {
-  const isLess = useCustomSize(800);
+  const isLess = useCustomSize(1200);
 
   return (
     <div
       className={
-        "h-full flex items-center justify-center flex-col overflow-auto custom-scrollbar " +
+        "h-full  border-green-500 flex items-center justify-center flex-col border overflow-auto custom-scrollbar " +
         `${isLess ? " w-full " : " w-1/2 "}`
       }
     >

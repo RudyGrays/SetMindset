@@ -69,7 +69,7 @@ export const ChatMessage = ({
               <span className="text-[0.6rem] flex items-center">
                 {messageDate}
               </span>
-              <span>{user.name}</span>
+              <span>{isCurrentUser ? "You" : user.name}</span>
             </div>
           </div>
         ) : (

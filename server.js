@@ -53,7 +53,7 @@ app.prepare().then(async () => {
     });
 
     socket.on("newOnlineUser", async (newUser) => {
-      console.log("new onlineUser", newUser.name);
+     
 
       if (!onlineUsers.some((user) => user.userId === newUser.id)) {
         onlineUsers.push({
